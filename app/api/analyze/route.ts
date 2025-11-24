@@ -23,8 +23,19 @@ export async function POST(req: NextRequest) {
     // Extract headers for answer keys (from column 3 onwards)
     const headers = jsonData[0];
     const answerKeys: { [key: string]: string } = {};
+    
+    // Helper to normalize answers (1->A, 2->B, etc.)
+    const normalizeAnswer = (val: any): string => {
+      if (val === undefined || val === null) return '';
+      const str = String(val).trim().toUpperCase();
+      const map: { [key: string]: string } = {
+        '1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E'
+      };
+      return map[str] || str;
+    };
+
     for (let i = 2; i < headers.length; i++) {
-      answerKeys[i] = headers[i];
+      answerKeys[i] = normalizeAnswer(headers[i]);
     }
 
     // Prepare student data
@@ -32,7 +43,7 @@ export async function POST(req: NextRequest) {
       const student: { name: string; class: string; answers: string[]; score?: number } = {
         name: row[0],
         class: row[1],
-        answers: row.slice(2),
+        answers: row.slice(2).map(ans => normalizeAnswer(ans)),
       };
       return student;
     });

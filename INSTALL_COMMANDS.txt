@@ -1,0 +1,50 @@
+==========================================
+PERINTAH UNTUK INSTALL DEPENDENCIES
+==========================================
+
+Jalankan perintah ini satu per satu di terminal:
+
+1. Install Drizzle ORM dan Neon driver:
+   npm install drizzle-orm @neondatabase/serverless
+
+2. Install Drizzle Kit untuk migration (dev dependency):
+   npm install -D drizzle-kit
+
+3. Install dotenv untuk environment variables:
+   npm install dotenv
+
+==========================================
+SETUP DATABASE NEON
+==========================================
+
+1. Buka: https://console.neon.tech/
+2. Login atau signup
+3. Create New Project
+4. Copy Connection String
+5. Paste ke file .env.local
+
+==========================================
+JALANKAN MIGRATION
+==========================================
+
+Setelah install selesai dan .env.local sudah diisi:
+
+1. Generate migration:
+   npm run db:generate
+
+2. Push ke database (create tables):
+   npm run db:push
+
+3. Buka Drizzle Studio untuk verify:
+   npm run db:studio
+
+==========================================
+TEST APLIKASI
+==========================================
+
+1. npm run dev
+2. Upload file Excel
+3. Lihat console browser untuk log "Data berhasil disimpan ke database"
+4. Cek di Drizzle Studio atau Neon Console
+
+==========================================
