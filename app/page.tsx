@@ -9,6 +9,7 @@ import Link from 'next/link';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface TestInfo {
   schoolName: string;
@@ -155,13 +156,15 @@ export default function Home() {
         const result = await response.json();
         setSavedDataId(result.data.id);
         setIsEditMode(false);
-        alert('Data berhasil disimpan!');
+        toast.success('Data berhasil disimpan!', {
+          duration: 3000,
+        });
       } else {
-        alert('Gagal menyimpan data');
+        toast.error('Gagal menyimpan data');
       }
     } catch (err) {
       console.error('Error saving:', err);
-      alert('Terjadi kesalahan saat menyimpan data');
+      toast.error('Terjadi kesalahan saat menyimpan data');
     } finally {
       setIsSaving(false);
     }
@@ -901,9 +904,14 @@ export default function Home() {
 
       const filename = `Analisis-${testInfo.testName || 'Ulangan'}-${testInfo.classInfo || ''}.pdf`;
       doc.save(filename);
+      
+      // Show success toast
+      toast.success(`PDF berhasil didownload!`, {
+        duration: 4000,
+      });
     } catch (error) {
       console.error('Error generating PDF:', error);
-      setError('Gagal membuat PDF. Silakan coba lagi.');
+      toast.error('Gagal membuat PDF. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -1175,19 +1183,63 @@ export default function Home() {
       ws['!ref'] = `A1:I${currentRow + 1}`;
 
       XLSX.utils.book_append_sheet(wb, ws, 'Analisis');
-      XLSX.writeFile(wb, `Analisis-${testInfo.testName || 'Ulangan'}-${testInfo.classInfo || ''}.xlsx`);
+      const excelFilename = `Analisis-${testInfo.testName || 'Ulangan'}-${testInfo.classInfo || ''}.xlsx`;
+      XLSX.writeFile(wb, excelFilename);
 
+      // Show success toast
+      toast.success(`Excel berhasil didownload!`, {
+        duration: 4000,
+      });
     } catch (error) {
       console.error('Error generating Excel:', error);
-      setError('Gagal membuat Excel. Silakan coba lagi.');
+      toast.error('Gagal membuat Excel. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <Toaster 
+        position="top-right"
+        reverseOrder={false}
+        gutter={8}
+        containerStyle={{}}
+        toastOptions={{
+          className: '',
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            borderRadius: '8px',
+            padding: '16px',
+            fontSize: '14px',
+            fontWeight: '500',
+          },
+          success: {
+            duration: 3000,
+            style: {
+              background: '#10b981',
+            },
+            iconTheme: {
+              primary: '#fff',
+              secondary: '#10b981',
+            },
+          },
+          error: {
+            duration: 3000,
+            style: {
+              background: '#ef4444',
+            },
+            iconTheme: {
+              primary: '#fff',
+              secondary: '#ef4444',
+            },
+          },
+        }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="bg-white rounded-sm shadow-lg p-6 border-l-4 border-blue-500">
@@ -1935,7 +1987,8 @@ export default function Home() {
             {/* End of PDF Content */}
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
