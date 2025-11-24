@@ -615,7 +615,7 @@ export default function Home() {
       // Signature section
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      doc.text('TANDA TANGAN', 107.5, yPosition, { align: 'center' });
+      // doc.text('TANDA TANGAN', 107.5, yPosition, { align: 'center' });
       yPosition += 10;
 
       // Signature section - two columns with 192mm total width
