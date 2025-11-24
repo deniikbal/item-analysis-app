@@ -94,6 +94,18 @@ export default function Home() {
   const [isSaving, setIsSaving] = useState(false);
   const [savedDataId, setSavedDataId] = useState<number | null>(null);
 
+  // Helper function to format date to Indonesian format
+  const formatDateIndonesia = (dateString: string): string => {
+    if (!dateString) return '-';
+    try {
+      const date = new Date(dateString);
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    } catch {
+      return dateString;
+    }
+  };
+
   // Load saved data from database on mount
   const loadSavedData = async () => {
     try {
@@ -527,7 +539,7 @@ export default function Home() {
       // Test Information
       const testInfoData = [
         ['NAMA SEKOLAH', testInfo.schoolName || '-', 'TAHUN PELAJARAN', testInfo.academicYear || '-'],
-        ['MATA PELAJARAN', testInfo.subject || '-', 'TANGGAL TES', testInfo.testDate || '-'],
+        ['MATA PELAJARAN', testInfo.subject || '-', 'TANGGAL TES', formatDateIndonesia(testInfo.testDate)],
         ['KELAS/SEMESTER', testInfo.classInfo || '-', 'KOMPETENSI DASAR', testInfo.competencyBasis || '-'],
         ['NAMA TES', testInfo.testName || '-', 'KKM', testInfo.kkm || '75'],
         ['GURU MATA PELAJARAN', testInfo.teacherName || '-', 'JUMLAH SOAL', conversionPreview.totalQuestions.toString()],
@@ -602,6 +614,39 @@ export default function Home() {
           8: { cellWidth: 27, fontSize: 5 },
         },
         margin: { left: 10, right: 10 },
+        didDrawCell: function(data: any) {
+          // Add badge color for Keterangan column (column index 8)
+          if (data.section === 'body' && data.column.index === 8) {
+            const keterangan = data.cell.raw;
+            
+            // Check "Belum Tuntas" first (more specific) before checking "Tuntas"
+            if (keterangan && keterangan.includes('Belum Tuntas')) {
+              // Red badge for "Belum Tuntas"
+              doc.setFillColor(239, 68, 68); // Red
+              doc.roundedRect(data.cell.x + 1, data.cell.y + 0.5, data.cell.width - 2, data.cell.height - 1, 1, 1, 'F');
+              
+              // White text
+              doc.setTextColor(255, 255, 255);
+              doc.setFontSize(5);
+              doc.setFont('helvetica', 'bold');
+              doc.text(keterangan, data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2 + 0.5, { 
+                align: 'center' 
+              });
+            } else if (keterangan && keterangan.includes('Tuntas')) {
+              // Green badge for "Tuntas" (checked after "Belum Tuntas")
+              doc.setFillColor(34, 197, 94); // Green
+              doc.roundedRect(data.cell.x + 1, data.cell.y + 0.5, data.cell.width - 2, data.cell.height - 1, 1, 1, 'F');
+              
+              // White text
+              doc.setTextColor(255, 255, 255);
+              doc.setFontSize(5);
+              doc.setFont('helvetica', 'bold');
+              doc.text(keterangan, data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2 + 0.5, { 
+                align: 'center' 
+              });
+            }
+          }
+        }
       });
 
       yPosition = doc.lastAutoTable.finalY + 8;
@@ -615,7 +660,6 @@ export default function Home() {
       // Signature section
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      // doc.text('TANDA TANGAN', 107.5, yPosition, { align: 'center' });
       yPosition += 10;
 
       // Signature section - two columns with 192mm total width
@@ -901,7 +945,7 @@ export default function Home() {
       // Test Info Section
       const testInfoData = [
         ['NAMA SEKOLAH', ':', testInfo.schoolName || '-', 'TAHUN PELAJARAN', ':', testInfo.academicYear || '-'],
-        ['MATA PELAJARAN', ':', testInfo.subject || '-', 'TANGGAL TES', ':', testInfo.testDate || '-'],
+        ['MATA PELAJARAN', ':', testInfo.subject || '-', 'TANGGAL TES', ':', formatDateIndonesia(testInfo.testDate)],
         ['KELAS/SEMESTER', ':', testInfo.classInfo || '-', 'NAMA TES', ':', testInfo.testName || '-'],
         ['KOMPETENSI DASAR', ':', testInfo.competencyBasis || '-', '', '', ''],
         ['GURU MATA PELAJARAN', ':', testInfo.teacherName || '-', '', '', ''],
@@ -1244,8 +1288,8 @@ export default function Home() {
                 <div key={field.key} className="space-y-2">
                   <label className="text-sm font-semibold text-gray-700">{field.label}</label>
                   <Input
-                    type="text"
-                    placeholder={field.placeholder}
+                    type={field.key === 'testDate' ? 'date' : 'text'}
+                    placeholder={field.key === 'testDate' ? undefined : field.placeholder}
                     value={testInfo[field.key as keyof TestInfo]}
                     onChange={(e) => setTestInfo({ ...testInfo, [field.key]: e.target.value })}
                     disabled={!isEditMode && savedDataId !== null}
@@ -1570,7 +1614,7 @@ export default function Home() {
                   <div className="flex">
                     <span className="font-semibold w-48">TANGGAL TES</span>
                     <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.testDate || '-'}</span>
+                    <span className="text-blue-700 font-semibold">{formatDateIndonesia(testInfo.testDate)}</span>
                   </div>
                   <div className="flex">
                     <span className="font-semibold w-48">KELAS/SEMESTER</span>

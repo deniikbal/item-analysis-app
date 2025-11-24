@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, timestamp, date } from 'drizzle-orm/pg-core';
 
 // Table untuk menyimpan data form ulangan (info sekolah, guru, dll)
 export const testInfo = pgTable('test_info', {
@@ -13,7 +13,7 @@ export const testInfo = pgTable('test_info', {
   principalName: varchar('principal_name', { length: 255 }),
   principalNip: varchar('principal_nip', { length: 50 }),
   academicYear: varchar('academic_year', { length: 20 }),
-  testDate: varchar('test_date', { length: 50 }),
+  testDate: date('test_date'),
   kkm: varchar('kkm', { length: 10 }),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
