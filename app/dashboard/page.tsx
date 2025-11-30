@@ -183,31 +183,31 @@ export default function DashboardPage() {
   };
 
   const fields = [
-    { key: 'schoolName', label: 'Nama Sekolah', placeholder: 'SMAN 1 BANTARUJEG', icon: Building2, section: 'school' },
-    { key: 'subject', label: 'Mata Pelajaran', placeholder: 'GEOGRAFI', icon: BookOpen, section: 'test' },
-    { key: 'classInfo', label: 'Kelas/Semester', placeholder: 'XI GBIM 1', icon: GraduationCap, section: 'test' },
-    { key: 'testName', label: 'Nama Tes', placeholder: 'PSAT', icon: ClipboardList, section: 'test' },
-    { key: 'competencyBasis', label: 'Kompetensi Dasar', placeholder: 'POTENSI SUMBER DAYA ALAM', icon: FileSpreadsheet, section: 'test' },
-    { key: 'teacherName', label: 'Guru Mata Pelajaran', placeholder: 'REVI INDIKA, S.Pd., Gr.', icon: User, section: 'teacher' },
-    { key: 'teacherNip', label: 'NIP Guru', placeholder: '199404162024212033', icon: UserCircle, section: 'teacher' },
-    { key: 'principalName', label: 'Kepala Sekolah', placeholder: 'Nama Kepala Sekolah', icon: User, section: 'principal' },
-    { key: 'principalNip', label: 'NIP Kepala Sekolah', placeholder: '197303021998021002', icon: UserCircle, section: 'principal' },
-    { key: 'academicYear', label: 'Tahun Pelajaran', placeholder: '2024/2025', icon: Calendar, section: 'test' },
-    { key: 'testDate', label: 'Tanggal Tes', placeholder: '10 JUNI 2025', type: 'date', icon: Calendar, section: 'test' },
-    { key: 'kkm', label: 'KKM', placeholder: '75', icon: ClipboardList, section: 'test' },
+    { key: 'schoolName', label: 'Nama Sekolah', placeholder: 'Masukkan nama sekolah', icon: Building2, section: 'school' },
+    { key: 'subject', label: 'Mata Pelajaran', placeholder: 'Masukkan mata pelajaran', icon: BookOpen, section: 'test' },
+    { key: 'classInfo', label: 'Kelas/Semester', placeholder: 'Contoh: XI IPA 1', icon: GraduationCap, section: 'test' },
+    { key: 'testName', label: 'Nama Tes', placeholder: 'Masukkan nama tes', icon: ClipboardList, section: 'test' },
+    { key: 'competencyBasis', label: 'Kompetensi Dasar', placeholder: 'Masukkan kompetensi dasar', icon: FileSpreadsheet, section: 'test' },
+    { key: 'teacherName', label: 'Guru Mata Pelajaran', placeholder: 'Masukkan nama guru', icon: User, section: 'teacher' },
+    { key: 'teacherNip', label: 'NIP Guru', placeholder: 'Masukkan NIP guru', icon: UserCircle, section: 'teacher' },
+    { key: 'principalName', label: 'Kepala Sekolah', placeholder: 'Masukkan nama kepala sekolah', icon: User, section: 'principal' },
+    { key: 'principalNip', label: 'NIP Kepala Sekolah', placeholder: 'Masukkan NIP kepala sekolah', icon: UserCircle, section: 'principal' },
+    { key: 'academicYear', label: 'Tahun Pelajaran', placeholder: 'Contoh: 2024/2025', icon: Calendar, section: 'test' },
+    { key: 'testDate', label: 'Tanggal Tes', placeholder: 'Pilih tanggal tes', type: 'date', icon: Calendar, section: 'test' },
+    { key: 'kkm', label: 'KKM', placeholder: 'Contoh: 75', icon: ClipboardList, section: 'test' },
   ];
 
   return (
     <>
       <Toaster position="top-right" />
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-cyan-50/50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           
           {/* Header Section */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg shadow-lg">
+              <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg shadow-lg">
                 <ClipboardList className="w-7 h-7 text-white" />
               </div>
               <div>
@@ -217,15 +217,47 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Usage Guide */}
+          <Card className="mb-6 border-0 shadow-lg bg-gradient-to-r from-emerald-50 to-teal-50">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="p-2 bg-emerald-600 rounded-lg flex-shrink-0">
+                  <FileSpreadsheet className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-emerald-900 mb-3 text-lg">Informasi Data Ulangan</h3>
+                  <div className="space-y-2 text-sm text-emerald-800">
+                    <div className="flex items-start gap-2">
+                      <span className="font-bold text-emerald-600">1.</span>
+                      <p><strong>Klik tombol "Edit"</strong> di pojok kanan atas card untuk mengubah informasi data ulangan.</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="font-bold text-emerald-600">2.</span>
+                      <p><strong>Isi semua field</strong> dengan informasi sekolah, mata pelajaran, kelas, nama tes, guru, kepala sekolah, dan KKM.</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="font-bold text-emerald-600">3.</span>
+                      <p><strong>Klik "Simpan"</strong> untuk menyimpan perubahan. Data ini akan digunakan untuk laporan PDF di halaman Upload Jawaban.</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="font-bold text-emerald-600">4.</span>
+                      <p><strong>Setelah selesai</strong>, klik menu "Upload Jawaban" untuk melakukan analisis butir soal.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Main Form Card */}
           <Card className="border-0 shadow-xl bg-white/80 backdrop-blur">
-            <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-t-lg">
+            <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <FileSpreadsheet className="w-5 h-5" />
                   <div>
                     <CardTitle className="text-xl">Informasi Data Ulangan</CardTitle>
-                    <CardDescription className="text-blue-100 text-sm">
+                    <CardDescription className="text-emerald-100 text-sm">
                       {isEditMode ? 'Mode Edit - Ubah data sesuai kebutuhan' : 'Klik Edit untuk mengubah data'}
                     </CardDescription>
                   </div>
@@ -293,7 +325,7 @@ export default function DashboardPage() {
                         className={`
                           text-sm transition-all duration-200
                           ${isEditMode 
-                            ? 'border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
+                            ? 'border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200' 
                             : 'bg-slate-50 border-slate-200'
                           }
                         `}
@@ -306,8 +338,8 @@ export default function DashboardPage() {
               {/* Info Footer */}
               <div className="mt-6 pt-6 border-t border-slate-200">
                 <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <div className="p-1.5 bg-blue-100 rounded">
-                    <Calendar className="w-4 h-4 text-blue-600" />
+                  <div className="p-1.5 bg-emerald-100 rounded">
+                    <Calendar className="w-4 h-4 text-emerald-600" />
                   </div>
                   <span>Data ini akan digunakan untuk membuat laporan analisis ulangan</span>
                 </div>

@@ -108,7 +108,7 @@ export default function RegisterPage() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={loading}>
                 {loading ? 'Memproses...' : 'Daftar'}
               </Button>
             </div>
@@ -117,11 +117,11 @@ export default function RegisterPage() {
         <CardFooter className="flex justify-between">
           <p className="text-sm text-gray-600">
             Sudah punya akun?{' '}
-            <Link href="/auth/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link href="/auth/login" className="font-medium text-emerald-600 hover:text-emerald-500">
               Login di sini
             </Link>
           </p>
-          <Link href="/" className="text-sm text-blue-600 hover:text-blue-500">
+          <Link href="/" className="text-sm text-emerald-600 hover:text-emerald-500">
             Kembali ke Beranda
           </Link>
         </CardFooter>

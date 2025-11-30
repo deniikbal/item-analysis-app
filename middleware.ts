@@ -7,12 +7,12 @@ export async function middleware(request: NextRequest) {
   response.headers.set('x-pathname', request.nextUrl.pathname);
   
   // Rute publik yang tidak memerlukan autentikasi
-  const publicPaths = ['/auth/login', '/auth/register'];
+  const publicPaths = ['/', '/auth/login', '/auth/register'];
   const { user } = await validateRequest();
   const isAuthenticated = !!user;
 
   // Jika path adalah publik, izinkan akses
-  if (publicPaths.some(path => request.nextUrl.pathname.startsWith(path))) {
+  if (publicPaths.some(path => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(path))) {
     // Jika pengguna sudah login dan mencoba mengakses halaman login/register, redirect ke dashboard
     if (isAuthenticated && 
         (request.nextUrl.pathname.startsWith('/auth/login') || 

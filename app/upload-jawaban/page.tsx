@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, Upload, Loader, Download, ArrowLeft, BarChart3 } from 'lucide-react';
+import { AlertCircle, Upload, Loader, Download, ArrowLeft, BarChart3, FileSpreadsheet, CheckCircle2, FileText, User } from 'lucide-react';
 import Link from 'next/link';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
@@ -1238,45 +1238,123 @@ export default function Home() {
           },
         }}
       />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-cyan-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg shadow-lg">
+              <Upload className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-slate-800">Upload Jawaban</h1>
+              <p className="text-slate-600 text-sm">Konversi file Excel dan analisis hasil ulangan secara otomatis</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Usage Guide */}
+        <Card className="mb-6 border-0 shadow-lg bg-gradient-to-r from-emerald-50 to-teal-50">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-emerald-600 rounded-lg flex-shrink-0">
+                <Upload className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-emerald-900 mb-3 text-lg">Upload & Konversi Excel</h3>
+                <div className="space-y-2 text-sm text-emerald-800">
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-emerald-600">1.</span>
+                    <p><strong>Siapkan file Excel</strong> dengan format: Kolom pertama berisi nama siswa,kolom kedua kelas,kolom berikutnya berisi jawaban untuk setiap nomor soal.</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-emerald-600">2.</span>
+                    <p><strong>Klik "Choose File"</strong> dan pilih file Excel (.xlsx atau .xls) yang sudah disiapkan.</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-emerald-600">3.</span>
+                    <p><strong>Klik tombol "Konversi"</strong> untuk memproses file. Sistem akan otomatis mengkonversi jawaban teks ke huruf (A, B, C, D, E).</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-emerald-600">4.</span>
+                    <p><strong>Lihat hasil analisis</strong> yang mencakup: Data Siswa, Analisis Butir Soal, Statistik, dan Detail Konversi.</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-emerald-600">5.</span>
+                    <p><strong>Download hasil</strong> dengan klik tombol "Unduh Excel" untuk file Excel atau "Unduh PDF" untuk laporan lengkap.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Upload & Convert Section */}
-        <Card className="mb-8 shadow-lg border-0 rounded-sm overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-orange-500 to-pink-600 text-white">
-            <CardTitle className="text-xl font-bold">📤 Upload & Konversi Excel</CardTitle>
+        <Card className="mb-8 shadow-xl border-0 bg-white/80 backdrop-blur">
+          <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
+            <div className="flex items-center gap-3">
+              <FileSpreadsheet className="w-5 h-5" />
+              <div>
+                <CardTitle className="text-xl">Upload & Konversi Excel</CardTitle>
+                <p className="text-emerald-100 text-sm mt-1">Upload file Excel untuk dikonversi dan dianalisis</p>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="pt-6 bg-white">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Input
-                  type="file"
-                  accept=".xlsx, .xls"
-                  onChange={handleFileChange}
-                  className="flex-1 rounded-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-                />
-                <Button
-                  onClick={handleConvert}
-                  disabled={!selectedFile || loading}
-                  className="bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white rounded-sm shadow-md font-semibold px-6"
-                >
-                  {loading ? (
-                    <>
-                      <Loader className="mr-2 h-4 w-4 animate-spin" />
-                      Memproses...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="mr-2 h-4 w-4" />
-                      Konversi
-                    </>
+          <CardContent className="p-6">
+            <div className="space-y-6">
+              {/* Upload Area */}
+              <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 bg-slate-50/50 hover:border-emerald-400 hover:bg-emerald-50/30 transition-all duration-200">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="p-4 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full">
+                    <FileText className="w-10 h-10 text-emerald-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-800 mb-1">Upload File Excel</h3>
+                    <p className="text-sm text-slate-600">Format: .xlsx atau .xls</p>
+                  </div>
+                  <div className="flex items-center gap-3 w-full max-w-2xl">
+                    <Input
+                      type="file"
+                      accept=".xlsx, .xls"
+                      onChange={handleFileChange}
+                      className="flex-1 border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 cursor-pointer"
+                    />
+                    <Button
+                      onClick={handleConvert}
+                      disabled={!selectedFile || loading}
+                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg px-8 gap-2"
+                      size="lg"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader className="h-5 w-5 animate-spin" />
+                          Memproses...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-5 w-5" />
+                          Konversi
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  {selectedFile && !error && (
+                    <div className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 px-4 py-2 rounded-lg">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="font-medium">{selectedFile.name}</span>
+                    </div>
                   )}
-                </Button>
+                </div>
               </div>
 
               {error && (
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-sm flex items-start shadow-md">
-                  <AlertCircle className="h-5 w-5 text-red-500 mr-3 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700 font-medium">{error}</p>
+                <div className="bg-rose-50 border-l-4 border-rose-500 rounded-r-lg p-4 flex items-start shadow-md">
+                  <AlertCircle className="h-5 w-5 text-rose-500 mr-3 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-sm font-semibold text-rose-800 mb-1">Terjadi Kesalahan</h4>
+                    <p className="text-sm text-rose-700">{error}</p>
+                  </div>
                 </div>
               )}
             </div>
@@ -1293,52 +1371,59 @@ export default function Home() {
         {/* Analysis Results Table */}
         {showAnalysis && analysisData && (
           <div className="space-y-6">
-            <div className="bg-white rounded-sm shadow-lg p-6 border-l-4 border-purple-500">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-sm">
-                    <BarChart3 className="w-6 h-6 text-white" />
+            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur">
+              <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white/20 rounded-lg backdrop-blur">
+                      <BarChart3 className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl">Hasil Analisis Statistik</CardTitle>
+                      <p className="text-emerald-100 text-sm mt-1">Hasil konversi dan analisis telah selesai</p>
+                    </div>
                   </div>
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Hasil Analisis Statistik</h2>
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={handleDownloadStyledExcel}
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg gap-2"
+                      disabled={loading}
+                      size="default"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader className="h-4 w-4 animate-spin" />
+                          Memproses...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4" />
+                          Excel
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      onClick={handleDownloadPDF}
+                      className="bg-rose-500 hover:bg-rose-600 text-white shadow-lg gap-2"
+                      disabled={loading}
+                      size="default"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader className="h-4 w-4 animate-spin" />
+                          Memproses...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4" />
+                          PDF
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <Button
-                    onClick={handleDownloadStyledExcel}
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-sm shadow-md font-semibold"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader className="mr-2 h-4 w-4 animate-spin" />
-                        Memproses...
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-4 h-4 mr-2" />
-                        Download Excel
-                      </>
-                    )}
-                  </Button>
-                  <Button
-                    onClick={handleDownloadPDF}
-                    className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-sm shadow-md font-semibold"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader className="mr-2 h-4 w-4 animate-spin" />
-                        Memproses...
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-4 h-4 mr-2" />
-                        Download PDF
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
+              </CardHeader>
+            </Card>
 
             {/* Wrapper for PDF export */}
             <div id="pdfContent" style={{ 
@@ -1525,235 +1610,269 @@ export default function Home() {
             {/* Header Info and Student Data - Show when analysis is displayed */}
             {conversionPreview && (
             <>
-            <div className="bg-white rounded-sm shadow-xl border-l-4 border-purple-500 overflow-hidden mb-8">
-              <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-4 font-bold text-xl">
-                ANALISIS HASIL ULANGAN
-              </div>
-              <div className="bg-gradient-to-r from-purple-100 to-indigo-100 text-center py-3 font-bold text-purple-800">
-                TIPE SOAL : PILIHAN GANDA
-              </div>
+            <Card className="shadow-xl border-0 bg-white/80 backdrop-blur mb-6">
+              <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg py-3">
+                <div className="text-center">
+                  <CardTitle className="text-xl font-bold mb-1">Analisis Hasil Ulangan</CardTitle>
+                  <p className="text-emerald-100 text-sm">Tipe Soal: Pilihan Ganda</p>
+                </div>
+              </CardHeader>
               
-              <div className="p-6">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-6">
-                  <div className="flex">
-                    <span className="font-semibold w-48">NAMA SEKOLAH</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.schoolName || '-'}</span>
+              <CardContent className="p-6">
+                {/* Info Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-6">
+                  <div className="flex items-start text-sm">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">NAMA SEKOLAH</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{testInfo.schoolName || '-'}</span>
                   </div>
-                  <div className="flex">
-                    <span className="font-semibold w-48">TAHUN PELAJARAN</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.academicYear || '-'}</span>
+                  <div className="flex items-start text-sm">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">TAHUN PELAJARAN</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{testInfo.academicYear || '-'}</span>
                   </div>
-                  <div className="flex">
-                    <span className="font-semibold w-48">MATA PELAJARAN</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.subject || '-'}</span>
+                  <div className="flex items-start text-sm">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">MATA PELAJARAN</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{testInfo.subject || '-'}</span>
                   </div>
-                  <div className="flex">
-                    <span className="font-semibold w-48">TANGGAL TES</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{formatDateIndonesia(testInfo.testDate)}</span>
+                  <div className="flex items-start text-sm">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">TANGGAL TES</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{formatDateIndonesia(testInfo.testDate)}</span>
                   </div>
-                  <div className="flex">
-                    <span className="font-semibold w-48">KELAS/SEMESTER</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.classInfo || '-'}</span>
+                  <div className="flex items-start text-sm">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">KELAS/SEMESTER</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{testInfo.classInfo || '-'}</span>
                   </div>
-                  <div className="flex">
-                    <span className="font-semibold w-48">NAMA TES</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.testName || '-'}</span>
+                  <div className="flex items-start text-sm">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">NAMA TES</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{testInfo.testName || '-'}</span>
                   </div>
-                  <div className="flex col-span-2">
-                    <span className="font-semibold w-48">KOMPETENSI DASAR</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.competencyBasis || '-'}</span>
+                  <div className="flex items-start text-sm md:col-span-2">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">KOMPETENSI DASAR</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{testInfo.competencyBasis || '-'}</span>
                   </div>
-                  <div className="flex col-span-2">
-                    <span className="font-semibold w-48">GURU MATA PELAJARAN</span>
-                    <span className="mr-2">:</span>
-                    <span className="text-blue-700 font-semibold">{testInfo.teacherName || '-'}</span>
+                  <div className="flex items-start text-sm md:col-span-2">
+                    <span className="font-semibold text-slate-700 w-44 flex-shrink-0">GURU MATA PELAJARAN</span>
+                    <span className="mx-2 text-slate-400">:</span>
+                    <span className="text-blue-600 font-medium">{testInfo.teacherName || '-'}</span>
                   </div>
                 </div>
 
-                <div className="border-t-4 border-gradient-to-r from-purple-300 to-indigo-300 pt-6">
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-gradient-to-br from-emerald-50 to-teal-100 p-5 rounded-sm border-2 border-emerald-300 shadow-md">
-                      <h3 className="font-bold text-center mb-4 text-emerald-800 text-lg">DATA SOAL PILIHAN GANDA</h3>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex justify-between bg-white px-3 py-2 rounded-sm">
-                          <span className="font-semibold text-gray-700">JUMLAH SOAL:</span>
+                {/* Bottom Cards */}
+                <div className="border-t border-slate-200 pt-6 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Data Soal Card */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg border border-emerald-200 p-4 shadow-sm">
+                      <h3 className="font-bold text-center mb-3 text-emerald-800 text-base flex items-center justify-center gap-2">
+                        <FileSpreadsheet className="w-4 h-4" />
+                        Data Soal Pilihan Ganda
+                      </h3>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center bg-white/80 backdrop-blur px-3 py-1.5 rounded-md text-xs">
+                          <span className="font-medium text-slate-700">Jumlah Soal:</span>
                           <span className="font-bold text-emerald-700">{conversionPreview.totalQuestions}</span>
                         </div>
-                        <div className="flex justify-between bg-white px-3 py-2 rounded-sm">
-                          <span className="font-semibold text-gray-700">JUMLAH OPTION:</span>
+                        <div className="flex justify-between items-center bg-white/80 backdrop-blur px-3 py-1.5 rounded-md text-xs">
+                          <span className="font-medium text-slate-700">Jumlah Option:</span>
                           <span className="font-bold text-emerald-700">5</span>
                         </div>
-                        <div className="flex justify-between bg-white px-3 py-2 rounded-sm">
-                          <span className="font-semibold text-gray-700">SKOR BENAR:</span>
+                        <div className="flex justify-between items-center bg-white/80 backdrop-blur px-3 py-1.5 rounded-md text-xs">
+                          <span className="font-medium text-slate-700">Skor Benar:</span>
                           <span className="font-bold text-emerald-700">1</span>
                         </div>
-                        <div className="flex justify-between bg-white px-3 py-2 rounded-sm">
-                          <span className="font-semibold text-gray-700">SKOR SALAH:</span>
+                        <div className="flex justify-between items-center bg-white/80 backdrop-blur px-3 py-1.5 rounded-md text-xs">
+                          <span className="font-medium text-slate-700">Skor Salah:</span>
                           <span className="font-bold text-emerald-700">0</span>
                         </div>
-                        <div className="flex justify-between bg-white px-3 py-2 rounded-sm">
-                          <span className="font-semibold text-gray-700">SKALA NILAI:</span>
+                        <div className="flex justify-between items-center bg-white/80 backdrop-blur px-3 py-1.5 rounded-md text-xs">
+                          <span className="font-medium text-slate-700">Skala Nilai:</span>
                           <span className="font-bold text-emerald-700">100</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-rose-50 to-pink-100 p-5 rounded-sm border-2 border-rose-300 shadow-md">
-                      <h3 className="font-bold text-center mb-4 text-rose-800 text-lg">RINCIAN KUNCI JAWABAN</h3>
-                      <div className="bg-white p-4 rounded-sm border-2 border-rose-200 text-center shadow-sm">
-                        <p className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent tracking-wider break-all">
+                    {/* Kunci Jawaban Card */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg border border-emerald-200 p-4 shadow-sm">
+                      <h3 className="font-bold text-center mb-3 text-emerald-800 text-base flex items-center justify-center gap-2">
+                        <CheckCircle2 className="w-4 h-4" />
+                        Rincian Kunci Jawaban
+                      </h3>
+                      <div className="bg-white/80 backdrop-blur rounded-md border border-emerald-200 p-4 text-center shadow-sm min-h-[140px] flex items-center justify-center">
+                        <p className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent tracking-wider break-all">
                           {conversionPreview.answerKeys}
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Student Data Table */}
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-3 px-2">DATA SISWA</h3>
-            </div>
-            <div className="bg-white rounded-sm shadow-lg overflow-x-auto mb-6 border border-gray-200">
-              <table className="w-full text-sm border-collapse">
-                <thead>
-                  <tr className="bg-gradient-to-r from-rose-400 to-pink-500 text-white border-b-2 border-rose-500">
-                    <th className="border border-rose-300 px-3 py-3 text-center font-bold">No.<br/>Urut</th>
-                    <th className="border border-rose-300 px-3 py-3 text-center font-bold">Nama</th>
-                    <th className="border border-rose-300 px-3 py-3 text-center font-bold">Kelas</th>
-                    <th className="border border-rose-300 px-3 py-3 text-center font-bold">RINCIAN JAWABAN SISWA</th>
-                    <th colSpan={2} className="border border-rose-300 px-3 py-3 text-center font-bold">JUMLAH</th>
-                    <th className="border border-rose-300 px-3 py-3 text-center font-bold">SKOR</th>
-                    <th className="border border-rose-300 px-3 py-3 text-center font-bold">NILAI</th>
-                    <th className="border border-rose-300 px-3 py-3 text-center font-bold">KET.</th>
-                  </tr>
-                  <tr className="bg-rose-100">
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                    <th className="border border-gray-300 px-2 py-1 text-xs font-semibold">BENAR</th>
-                    <th className="border border-gray-300 px-2 py-1 text-xs font-semibold">SALAH</th>
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...conversionPreview.studentsData]
-                    .sort((a, b) => {
-                      // Sort by kelas first
-                      const kelasCompare = (a.kelas || '').localeCompare(b.kelas || '');
-                      if (kelasCompare !== 0) return kelasCompare;
-                      // Then sort by name alphabetically
-                      return (a.nama || '').localeCompare(b.nama || '');
-                    })
-                    .map((student, index) => (
-                    <tr key={student.no} className="hover:bg-gradient-to-r hover:from-rose-50 hover:to-pink-50 transition-colors duration-150">
-                      <td className="border border-gray-300 px-3 py-2 text-center">{index + 1}</td>
-                      <td className="border border-gray-300 px-3 py-2">{student.nama.toUpperCase()}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-center">{student.kelas || '-'}</td>
-                      <td className="border border-gray-300 px-3 py-2 font-mono text-xs break-all">{student.rincianJawaban}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-center font-semibold text-green-700">{student.jumlahBenar}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-center font-semibold text-red-700">{student.jumlahSalah}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-center">{student.skor}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-center font-semibold">{student.nilai}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-center text-xs">{student.keterangan}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Card className="shadow-xl border-0 bg-white/80 backdrop-blur mb-6">
+              <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg py-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Data Siswa</CardTitle>
+                    <p className="text-emerald-100 text-xs mt-0.5">Daftar siswa dan hasil jawaban ulangan</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="overflow-x-auto rounded-lg border border-slate-200">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
+                        <th className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">No.<br/>Urut</th>
+                        <th className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Nama</th>
+                        <th className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Kelas</th>
+                        <th className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Rincian Jawaban Siswa</th>
+                        <th colSpan={2} className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Jumlah</th>
+                        <th className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Skor</th>
+                        <th className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Nilai</th>
+                        <th className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Ket.</th>
+                      </tr>
+                      <tr className="bg-emerald-50">
+                        <th className="border border-slate-200 px-2 py-1"></th>
+                        <th className="border border-slate-200 px-2 py-1"></th>
+                        <th className="border border-slate-200 px-2 py-1"></th>
+                        <th className="border border-slate-200 px-2 py-1"></th>
+                        <th className="border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-700">Benar</th>
+                        <th className="border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-700">Salah</th>
+                        <th className="border border-slate-200 px-2 py-1"></th>
+                        <th className="border border-slate-200 px-2 py-1"></th>
+                        <th className="border border-slate-200 px-2 py-1"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[...conversionPreview.studentsData]
+                        .sort((a, b) => {
+                          // Sort by kelas first
+                          const kelasCompare = (a.kelas || '').localeCompare(b.kelas || '');
+                          if (kelasCompare !== 0) return kelasCompare;
+                          // Then sort by name alphabetically
+                          return (a.nama || '').localeCompare(b.nama || '');
+                        })
+                        .map((student, index) => (
+                        <tr key={student.no} className="hover:bg-emerald-50/50 transition-colors duration-150">
+                          <td className="border border-slate-200 px-2 py-1.5 text-center text-xs">{index + 1}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 text-xs">{student.nama.toUpperCase()}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 text-center text-xs">{student.kelas || '-'}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 font-mono text-xs break-all">{student.rincianJawaban}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 text-center font-semibold text-xs text-emerald-600">{student.jumlahBenar}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 text-center font-semibold text-xs text-orange-600">{student.jumlahSalah}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 text-center text-xs">{student.skor}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 text-center font-semibold text-xs">{student.nilai}</td>
+                          <td className="border border-slate-200 px-2 py-1.5 text-center text-xs">{student.keterangan}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
 
             </>
             )}
 
             {/* Analysis Statistics Table */}
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-3 px-2">STATISTIK ANALISIS BUTIR</h3>
-            </div>
-            <div className="bg-white rounded-sm shadow-lg overflow-x-auto border border-gray-200">
-              <table className="w-full text-sm border-collapse">
-                <thead>
-                  <tr className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
-                    <th rowSpan={2} className="border border-indigo-300 px-2 py-3 text-center font-bold">No.</th>
-                    <th colSpan={3} className="border border-indigo-300 px-2 py-3 text-center font-bold">Statistics Item</th>
-                    <th colSpan={3} className="border border-indigo-300 px-2 py-3 text-center font-bold">Statistics Option</th>
-                    <th colSpan={4} className="border border-indigo-300 px-2 py-3 text-center font-bold">Tafsiran</th>
-                  </tr>
-                  <tr className="bg-indigo-100">
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">Prop. Correct</th>
-                    <th className="border border-gray-300 px-1 py-2 text-xs font-semibold">Biser</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">Pt.Biser</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">Opt.</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">Prop. End</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">Key</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">T. Kesukaran</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">D. Beda</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">Efek. Opt</th>
-                    <th className="border border-gray-300 px-2 py-2 text-xs font-semibold">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {analysisData.map((item, idx) => {
-                    const rowSpan = item.options.length;
-                    return item.options.map((opt, optIdx) => (
-                      <tr key={`${idx}-${optIdx}`} className="hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-colors duration-150">
-                        {optIdx === 0 && (
-                          <>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-2 py-2 text-center font-medium">
-                              {idx + 1}
-                            </td>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-2 py-2 text-center text-xs">
-                              {item.propCorrect.toFixed(3)}
-                            </td>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-1 py-2 text-center text-xs">
-                              {item.biser.toFixed(3)}
-                            </td>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-2 py-2 text-center text-xs">
-                              {item.pointBiser.toFixed(3)}
-                            </td>
-                          </>
-                        )}
-                        <td className="border border-gray-300 px-2 py-2 text-center font-medium text-xs">
-                          {opt.option}
-                        </td>
-                        <td className="border border-gray-300 px-2 py-2 text-center text-xs">
-                          {opt.propEndorsing.toFixed(3)}
-                        </td>
-                        <td className="border border-gray-300 px-2 py-2 text-center text-yellow-500 font-bold text-lg">
-                          {opt.isKey ? '★' : ''}
-                        </td>
-                        {optIdx === 0 && (
-                          <>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-2 py-2 text-xs">
-                              {item.tingkatKesukaran}
-                            </td>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-2 py-2 text-xs">
-                              {item.dayaBeda}
-                            </td>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-2 py-2 text-xs">
-                              {item.efektivitasOption}
-                            </td>
-                            <td rowSpan={rowSpan} className="border border-gray-300 px-2 py-2 text-xs">
-                              {item.statusSoal}
-                            </td>
-                          </>
-                        )}
+            <Card className="shadow-xl border-0 bg-white/80 backdrop-blur">
+              <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg py-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur">
+                    <BarChart3 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Statistik Analisis Butir</CardTitle>
+                    <p className="text-emerald-100 text-xs mt-0.5">Analisis statistik item dan option soal</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="overflow-x-auto rounded-lg border border-slate-200">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
+                        <th rowSpan={2} className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">No.</th>
+                        <th colSpan={3} className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Statistics Item</th>
+                        <th colSpan={3} className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Statistics Option</th>
+                        <th colSpan={4} className="border border-emerald-300 px-2 py-2 text-center font-bold text-xs">Tafsiran</th>
                       </tr>
-                    ));
-                  })}
-                </tbody>
-              </table>
-            </div>
+                      <tr className="bg-emerald-50">
+                        <th className="border border-slate-200 px-2 py-1.5 text-xs font-semibold text-slate-700 w-20">Prop. Correct</th>
+                        <th className="border border-slate-200 px-1 py-1.5 text-xs font-semibold text-slate-700 w-16">Biser</th>
+                        <th className="border border-slate-200 px-1 py-1.5 text-xs font-semibold text-slate-700 w-16">Pt.Biser</th>
+                        <th className="border border-slate-200 px-1 py-1.5 text-xs font-semibold text-slate-700 w-12">Opt.</th>
+                        <th className="border border-slate-200 px-2 py-1.5 text-xs font-semibold text-slate-700 w-20">Prop. End</th>
+                        <th className="border border-slate-200 px-1 py-1.5 text-xs font-semibold text-slate-700 w-12">Key</th>
+                        <th className="border border-slate-200 px-2 py-1.5 text-xs font-semibold text-slate-700">T. Kesukaran</th>
+                        <th className="border border-slate-200 px-2 py-1.5 text-xs font-semibold text-slate-700">D. Beda</th>
+                        <th className="border border-slate-200 px-2 py-1.5 text-xs font-semibold text-slate-700">Efek. Opt</th>
+                        <th className="border border-slate-200 px-2 py-1.5 text-xs font-semibold text-slate-700">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {analysisData.map((item, idx) => {
+                        const rowSpan = item.options.length;
+                        return item.options.map((opt, optIdx) => (
+                          <tr key={`${idx}-${optIdx}`} className="hover:bg-emerald-50/50 transition-colors duration-150">
+                            {optIdx === 0 && (
+                              <>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-1 py-1.5 text-center font-medium text-xs bg-slate-50">
+                                  {idx + 1}
+                                </td>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-1 py-1.5 text-center text-xs w-20">
+                                  {item.propCorrect.toFixed(3)}
+                                </td>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-1 py-1.5 text-center text-xs w-16">
+                                  {item.biser.toFixed(3)}
+                                </td>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-1 py-1.5 text-center text-xs w-16">
+                                  {item.pointBiser.toFixed(3)}
+                                </td>
+                              </>
+                            )}
+                            <td className="border border-slate-200 px-1 py-1.5 text-center font-medium text-xs bg-slate-50 w-12">
+                              {opt.option}
+                            </td>
+                            <td className="border border-slate-200 px-1 py-1.5 text-center text-xs w-20">
+                              {opt.propEndorsing.toFixed(3)}
+                            </td>
+                            <td className="border border-slate-200 px-1 py-1.5 text-center text-amber-500 font-bold text-base w-12">
+                              {opt.isKey ? '★' : ''}
+                            </td>
+                            {optIdx === 0 && (
+                              <>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-2 py-1.5 text-xs">
+                                  {item.tingkatKesukaran}
+                                </td>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-2 py-1.5 text-xs">
+                                  {item.dayaBeda}
+                                </td>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-2 py-1.5 text-xs">
+                                  {item.efektivitasOption}
+                                </td>
+                                <td rowSpan={rowSpan} className="border border-slate-200 px-2 py-1.5 text-xs">
+                                  {item.statusSoal}
+                                </td>
+                              </>
+                            )}
+                          </tr>
+                        ));
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Summary Statistics */}
             {conversionPreview && (
@@ -1843,26 +1962,48 @@ export default function Home() {
 
             {/* Detail Konversi per Soal */}
             {conversionPreview && (
-              <Card className="mt-6 shadow-lg border-0 rounded-sm overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
-                  <CardTitle className="text-xl font-bold">🔍 Detail Konversi per Soal</CardTitle>
+              <Card className="mt-6 shadow-xl border-0 bg-white/80 backdrop-blur">
+                <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">Detail Konversi per Soal</CardTitle>
+                      <p className="text-emerald-100 text-xs mt-0.5">Mapping jawaban teks ke huruf pilihan</p>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent className="bg-white pt-6">
-                  <div className="space-y-5">
+                <CardContent className="p-4">
+                  <div className="space-y-4">
                     {conversionPreview.conversionMappings.map((item) => (
-                      <div key={item.questionNumber} className="border-b-2 border-cyan-100 pb-4 last:border-b-0">
-                        <h3 className="font-bold text-base mb-3 text-cyan-700">📝 Soal {item.questionNumber}</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                      <div key={item.questionNumber} className="group">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center justify-center w-7 h-7 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-md text-white text-sm font-bold shadow">
+                            {item.questionNumber}
+                          </div>
+                          <h3 className="font-semibold text-sm text-slate-800">
+                            Soal {item.questionNumber}
+                          </h3>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 pl-9">
                           {Object.entries(item.mapping).map(([text, letter]) => (
                             <div
                               key={text}
-                              className="flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50 p-3 rounded-sm border-2 border-cyan-200 shadow-sm hover:shadow-md transition-shadow"
+                              className="group/item flex items-center justify-between bg-gradient-to-br from-slate-50 to-emerald-50/30 p-2 rounded-md border border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all duration-200"
                             >
-                              <span className="truncate flex-1 mr-2 text-sm font-medium text-gray-700">{text}</span>
-                              <span className="font-bold text-base px-2 py-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-sm">{letter}</span>
+                              <span className="truncate flex-1 mr-1.5 text-xs font-medium text-slate-700 group-hover/item:text-slate-900">
+                                {text}
+                              </span>
+                              <div className="flex items-center justify-center min-w-[1.75rem] h-6 px-2 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-md text-sm font-bold shadow group-hover/item:shadow-lg group-hover/item:scale-105 transition-all duration-200">
+                                {letter}
+                              </div>
                             </div>
                           ))}
                         </div>
+                        {item.questionNumber !== conversionPreview.conversionMappings.length && (
+                          <div className="mt-4 border-b border-slate-200"></div>
+                        )}
                       </div>
                     ))}
                   </div>

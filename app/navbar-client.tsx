@@ -38,24 +38,24 @@ export function NavbarClient({ user }: NavbarClientProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <Link href="/dashboard" className="text-xl font-bold text-gray-900 hover:text-blue-600 transition">
-                Analisis Butir Soal
+              <Link href="/dashboard" className="text-xl font-bold text-gray-900 hover:text-emerald-600 transition">
+                ANABUT
               </Link>
               <nav className="hidden md:flex space-x-1">
                 <Link href="/dashboard">
                   <Button 
-                    variant={pathname === '/dashboard' ? 'default' : 'ghost'} 
+                    variant="ghost"
                     size="sm"
-                    className={pathname === '/dashboard' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'hover:bg-gray-100'}
+                    className={pathname === '/dashboard' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'text-gray-700 hover:bg-gray-100'}
                   >
                     Dashboard
                   </Button>
                 </Link>
                 <Link href="/upload-jawaban">
                   <Button 
-                    variant={pathname === '/upload-jawaban' ? 'default' : 'ghost'} 
+                    variant="ghost"
                     size="sm"
-                    className={pathname === '/upload-jawaban' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'hover:bg-gray-100'}
+                    className={pathname === '/upload-jawaban' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'text-gray-700 hover:bg-gray-100'}
                   >
                     Upload Jawaban
                   </Button>
