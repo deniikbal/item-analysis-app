@@ -36,9 +36,7 @@ export const users = pgTable('users', {
 export const sessions = pgTable('sessions', {
   id: varchar('id', { length: 128 }).primaryKey(),
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  expiresAt: timestamp('expires_at').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
 });
 
 // Table untuk menyimpan token reset password

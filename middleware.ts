@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 import { validateRequest } from '@/lib/auth-utils';
 
 export async function middleware(request: NextRequest) {
+  // Pass pathname to headers for navbar active state
+  const response = NextResponse.next();
+  response.headers.set('x-pathname', request.nextUrl.pathname);
+  
   // Rute publik yang tidak memerlukan autentikasi
   const publicPaths = ['/auth/login', '/auth/register'];
-  const isAuthenticated = await validateRequest();
+  const { user } = await validateRequest();
+  const isAuthenticated = !!user;
 
   // Jika path adalah publik, izinkan akses
   if (publicPaths.some(path => request.nextUrl.pathname.startsWith(path))) {
-    // Jika pengguna sudah login dan mencoba mengakses halaman login/register, redirect ke home
+    // Jika pengguna sudah login dan mencoba mengakses halaman login/register, redirect ke dashboard
     if (isAuthenticated && 
         (request.nextUrl.pathname.startsWith('/auth/login') || 
          request.nextUrl.pathname.startsWith('/auth/register'))) {
-      return NextResponse.redirect(new URL('/', request.url));
+      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
     return NextResponse.next();
   }
@@ -24,7 +28,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Untuk semua rute lainnya, lanjutkan
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

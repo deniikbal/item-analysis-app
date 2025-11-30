@@ -19,7 +19,7 @@ export async function GET() {
     const data = await db
       .select()
       .from(testInfo)
-      .where(eq(testInfo.userId, user.id))
+      .where(eq(testInfo.userId, parseInt(user.id)))
       .orderBy(testInfo.updatedAt)
       .limit(1);
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     const existing = await db
       .select()
       .from(testInfo)
-      .where(eq(testInfo.userId, user.id))
+      .where(eq(testInfo.userId, parseInt(user.id)))
       .limit(1);
 
     let result;
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         .update(testInfo)
         .set({
           ...data,
-          userId: user.id,
+          userId: parseInt(user.id),
           updatedAt: new Date(),
         })
         .where(eq(testInfo.id, existing[0].id))
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
         .insert(testInfo)
         .values({
           ...data,
-          userId: user.id,
+          userId: parseInt(user.id),
         })
         .returning();
     }
@@ -119,7 +119,7 @@ export async function PUT(req: NextRequest) {
       .where(eq(testInfo.id, id))
       .limit(1);
 
-    if (existing.length === 0 || existing[0].userId !== user.id) {
+    if (existing.length === 0 || existing[0].userId !== parseInt(user.id)) {
       return NextResponse.json(
         { error: 'Data tidak ditemukan atau tidak berhak' },
         { status: 403 }

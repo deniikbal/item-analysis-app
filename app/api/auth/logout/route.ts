@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { lucia } from '@/lib/auth';
 import { validateRequest } from '@/lib/auth-utils';
+import { cookies } from 'next/headers';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,11 +15,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Hapus sesi
-    await auth.invalidateSession(session.sessionId);
+    await lucia.invalidateSession(session.id);
 
     // Hapus cookie sesi
-    const authRequest = auth.handleRequest(req);
-    authRequest.setSession(null);
+    const sessionCookie = lucia.createBlankSessionCookie();
+    const cookieStore = await cookies();
+    cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
     return NextResponse.json({
       success: true,

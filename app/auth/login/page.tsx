@@ -32,7 +32,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         toast.success('Login berhasil!');
-        router.push('/'); // Redirect ke halaman utama
+        router.push('/dashboard'); // Redirect ke dashboard
         router.refresh();
       } else {
         toast.error(data.message || 'Gagal login');

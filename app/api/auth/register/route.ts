@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { lucia } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
+import { cookies } from 'next/headers';
 
 export async function POST(req: NextRequest) {
   const { name, email, password } = await req.json();
@@ -52,14 +53,12 @@ export async function POST(req: NextRequest) {
       .returning();
 
     // Buat sesi untuk pengguna yang baru terdaftar
-    const session = await auth.createSession({
-      userId: newUser.id,
-      attributes: {},
-    });
+    const session = await lucia.createSession(newUser.id.toString(), {});
 
     // Set cookie sesi
-    const authRequest = auth.handleRequest(req);
-    authRequest.setSession(session);
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    const cookieStore = await cookies();
+    cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
     return NextResponse.json({
       success: true,

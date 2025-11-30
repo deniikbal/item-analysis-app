@@ -40,8 +40,9 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success('Registrasi berhasil! Silakan login');
-        router.push('/auth/login');
+        toast.success('Registrasi berhasil!');
+        router.push('/dashboard'); // Redirect ke dashboard
+        router.refresh();
       } else {
         toast.error(data.message || 'Gagal registrasi');
       }
