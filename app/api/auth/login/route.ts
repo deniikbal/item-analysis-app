@@ -24,7 +24,11 @@ export async function POST(req: NextRequest) {
       .from(users)
       .where(eq(users.email, email.toLowerCase()));
 
+    console.log('Login attempt for email:', email.toLowerCase());
+    console.log('User found:', userArray.length > 0 ? 'Yes' : 'No');
+
     if (userArray.length === 0) {
+      console.log('Login failed: Email not found');
       return NextResponse.json(
         { message: 'Email atau password salah' },
         { status: 401 }
@@ -35,7 +39,10 @@ export async function POST(req: NextRequest) {
 
     // Verifikasi password
     const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log('Password valid:', isValidPassword);
+    
     if (!isValidPassword) {
+      console.log('Login failed: Invalid password');
       return NextResponse.json(
         { message: 'Email atau password salah' },
         { status: 401 }

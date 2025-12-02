@@ -1239,31 +1239,31 @@ export default function Home() {
         }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-cyan-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
         
         {/* Header Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2">
             <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg shadow-lg">
-              <Upload className="w-7 h-7 text-white" />
+              <Upload className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-800">Upload Jawaban</h1>
-              <p className="text-slate-600 text-sm">Konversi file Excel dan analisis hasil ulangan secara otomatis</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">Upload Jawaban</h1>
+              <p className="text-slate-600 text-xs sm:text-sm">Konversi file Excel dan analisis hasil ulangan secara otomatis</p>
             </div>
           </div>
         </div>
 
         {/* Usage Guide */}
-        <Card className="mb-6 border-0 shadow-lg bg-gradient-to-r from-emerald-50 to-teal-50">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
+        <Card className="mb-4 sm:mb-6 border-0 shadow-lg bg-gradient-to-r from-emerald-50 to-teal-50">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-start gap-3 sm:gap-4">
               <div className="p-2 bg-emerald-600 rounded-lg flex-shrink-0">
-                <Upload className="w-5 h-5 text-white" />
+                <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-emerald-900 mb-3 text-lg">Upload & Konversi Excel</h3>
-                <div className="space-y-2 text-sm text-emerald-800">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-emerald-900 mb-2 sm:mb-3 text-base sm:text-lg">Upload & Konversi Excel</h3>
+                <div className="space-y-2 text-xs sm:text-sm text-emerald-800">
                   <div className="flex items-start gap-2">
                     <span className="font-bold text-emerald-600">1.</span>
                     <p><strong>Siapkan file Excel</strong> dengan format: Kolom pertama berisi nama siswa,kolom kedua kelas,kolom berikutnya berisi jawaban untuk setiap nomor soal.</p>
@@ -1291,58 +1291,58 @@ export default function Home() {
         </Card>
 
         {/* Upload & Convert Section */}
-        <Card className="mb-8 shadow-xl border-0 bg-white/80 backdrop-blur">
+        <Card className="mb-6 sm:mb-8 shadow-xl border-0 bg-white/80 backdrop-blur">
           <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
-            <div className="flex items-center gap-3">
-              <FileSpreadsheet className="w-5 h-5" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5" />
               <div>
-                <CardTitle className="text-xl">Upload & Konversi Excel</CardTitle>
-                <p className="text-emerald-100 text-sm mt-1">Upload file Excel untuk dikonversi dan dianalisis</p>
+                <CardTitle className="text-base sm:text-lg md:text-xl">Upload & Konversi Excel</CardTitle>
+                <p className="text-emerald-100 text-xs sm:text-sm mt-1">Upload file Excel untuk dikonversi dan dianalisis</p>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="space-y-6">
               {/* Upload Area */}
-              <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 bg-slate-50/50 hover:border-emerald-400 hover:bg-emerald-50/30 transition-all duration-200">
-                <div className="flex flex-col items-center justify-center text-center space-y-4">
-                  <div className="p-4 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full">
-                    <FileText className="w-10 h-10 text-emerald-600" />
+              <div className="border-2 border-dashed border-slate-300 rounded-lg p-4 sm:p-6 md:p-8 bg-slate-50/50 hover:border-emerald-400 hover:bg-emerald-50/30 transition-all duration-200">
+                <div className="flex flex-col items-center justify-center text-center space-y-3 sm:space-y-4">
+                  <div className="p-3 sm:p-4 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full">
+                    <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-1">Upload File Excel</h3>
-                    <p className="text-sm text-slate-600">Format: .xlsx atau .xls</p>
+                    <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-1">Upload File Excel</h3>
+                    <p className="text-xs sm:text-sm text-slate-600">Format: .xlsx atau .xls</p>
                   </div>
-                  <div className="flex items-center gap-3 w-full max-w-2xl">
+                  <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full max-w-2xl">
                     <Input
                       type="file"
                       accept=".xlsx, .xls"
                       onChange={handleFileChange}
-                      className="flex-1 border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 cursor-pointer"
+                      className="flex-1 w-full border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 cursor-pointer text-xs sm:text-sm"
                     />
                     <Button
                       onClick={handleConvert}
                       disabled={!selectedFile || loading}
-                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg px-8 gap-2"
-                      size="lg"
+                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg px-6 sm:px-8 gap-1.5 sm:gap-2 w-full sm:w-auto text-xs sm:text-sm"
+                      size="default"
                     >
                       {loading ? (
                         <>
-                          <Loader className="h-5 w-5 animate-spin" />
+                          <Loader className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                           Memproses...
                         </>
                       ) : (
                         <>
-                          <Upload className="h-5 w-5" />
+                          <Upload className="h-4 w-4 sm:h-5 sm:w-5" />
                           Konversi
                         </>
                       )}
                     </Button>
                   </div>
                   {selectedFile && !error && (
-                    <div className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 px-4 py-2 rounded-lg">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span className="font-medium">{selectedFile.name}</span>
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-700 bg-emerald-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg max-w-full">
+                      <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                      <span className="font-medium truncate">{selectedFile.name}</span>
                     </div>
                   )}
                 </div>
@@ -1373,49 +1373,49 @@ export default function Home() {
           <div className="space-y-6">
             <Card className="border-0 shadow-xl bg-white/80 backdrop-blur">
               <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-3 sm:gap-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <div className="p-2 bg-white/20 rounded-lg backdrop-blur">
-                      <BarChart3 className="w-6 h-6 text-white" />
+                      <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
-                    <div>
-                      <CardTitle className="text-2xl">Hasil Analisis Statistik</CardTitle>
-                      <p className="text-emerald-100 text-sm mt-1">Hasil konversi dan analisis telah selesai</p>
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-lg sm:text-xl md:text-2xl">Hasil Analisis Statistik</CardTitle>
+                      <p className="text-emerald-100 text-xs sm:text-sm mt-1">Hasil konversi dan analisis telah selesai</p>
                     </div>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Button
                       onClick={handleDownloadStyledExcel}
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg gap-2"
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg gap-1.5 sm:gap-2 w-full sm:w-auto text-xs sm:text-sm"
                       disabled={loading}
                       size="default"
                     >
                       {loading ? (
                         <>
-                          <Loader className="h-4 w-4 animate-spin" />
+                          <Loader className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
                           Memproses...
                         </>
                       ) : (
                         <>
-                          <Download className="w-4 h-4" />
+                          <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           Excel
                         </>
                       )}
                     </Button>
                     <Button
                       onClick={handleDownloadPDF}
-                      className="bg-rose-500 hover:bg-rose-600 text-white shadow-lg gap-2"
+                      className="bg-rose-500 hover:bg-rose-600 text-white shadow-lg gap-1.5 sm:gap-2 w-full sm:w-auto text-xs sm:text-sm"
                       disabled={loading}
                       size="default"
                     >
                       {loading ? (
                         <>
-                          <Loader className="h-4 w-4 animate-spin" />
+                          <Loader className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
                           Memproses...
                         </>
                       ) : (
                         <>
-                          <Download className="w-4 h-4" />
+                          <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           PDF
                         </>
                       )}

@@ -5,19 +5,23 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import toast from 'react-hot-toast';
+import { AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -32,14 +36,18 @@ export default function LoginPage() {
 
       if (response.ok) {
         toast.success('Login berhasil!');
-        router.push('/dashboard'); // Redirect ke dashboard
+        router.push('/dashboard');
         router.refresh();
       } else {
-        toast.error(data.message || 'Gagal login');
+        const errorMsg = data.message || 'Gagal login';
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error('Terjadi kesalahan saat login');
+      const errorMsg = 'Terjadi kesalahan saat login';
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -55,6 +63,12 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleLogin}>
             <div className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
               <div>
                 <Label htmlFor="email">Email</Label>
                 <Input

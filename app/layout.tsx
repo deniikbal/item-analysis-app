@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 async function Navbar() {
   const { user } = await validateRequest();
-  return <NavbarClient user={user} />;
+  return <NavbarClient user={user ? { name: user.name, role: user.role } : null} />;
 }
 
 export default async function RootLayout({

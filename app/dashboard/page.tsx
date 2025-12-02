@@ -202,46 +202,46 @@ export default function DashboardPage() {
       <Toaster position="top-right" />
       
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
           
           {/* Header Section */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg shadow-lg">
-                <ClipboardList className="w-7 h-7 text-white" />
+                <ClipboardList className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-slate-800">Data Ulangan</h1>
-                <p className="text-slate-600 text-sm">Kelola informasi ulangan dan pengaturan sekolah</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Data Ulangan</h1>
+                <p className="text-slate-600 text-xs sm:text-sm">Kelola informasi ulangan dan pengaturan sekolah</p>
               </div>
             </div>
           </div>
 
           {/* Usage Guide */}
           <Card className="mb-6 border-0 shadow-lg bg-gradient-to-r from-emerald-50 to-teal-50">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
                 <div className="p-2 bg-emerald-600 rounded-lg flex-shrink-0">
-                  <FileSpreadsheet className="w-5 h-5 text-white" />
+                  <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-emerald-900 mb-3 text-lg">Informasi Data Ulangan</h3>
-                  <div className="space-y-2 text-sm text-emerald-800">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-emerald-900 mb-2 sm:mb-3 text-base sm:text-lg">Informasi Data Ulangan</h3>
+                  <div className="space-y-2 text-xs sm:text-sm text-emerald-800">
                     <div className="flex items-start gap-2">
-                      <span className="font-bold text-emerald-600">1.</span>
-                      <p><strong>Klik tombol "Edit"</strong> di pojok kanan atas card untuk mengubah informasi data ulangan.</p>
+                      <span className="font-bold text-emerald-600 flex-shrink-0">1.</span>
+                      <p className="break-words"><strong>Klik tombol "Edit"</strong> di pojok kanan atas card untuk mengubah informasi data ulangan.</p>
                     </div>
                     <div className="flex items-start gap-2">
-                      <span className="font-bold text-emerald-600">2.</span>
-                      <p><strong>Isi semua field</strong> dengan informasi sekolah, mata pelajaran, kelas, nama tes, guru, kepala sekolah, dan KKM.</p>
+                      <span className="font-bold text-emerald-600 flex-shrink-0">2.</span>
+                      <p className="break-words"><strong>Isi semua field</strong> dengan informasi sekolah, mata pelajaran, kelas, nama tes, guru, kepala sekolah, dan KKM.</p>
                     </div>
                     <div className="flex items-start gap-2">
-                      <span className="font-bold text-emerald-600">3.</span>
-                      <p><strong>Klik "Simpan"</strong> untuk menyimpan perubahan. Data ini akan digunakan untuk laporan PDF di halaman Upload Jawaban.</p>
+                      <span className="font-bold text-emerald-600 flex-shrink-0">3.</span>
+                      <p className="break-words"><strong>Klik "Simpan"</strong> untuk menyimpan perubahan. Data ini akan digunakan untuk laporan PDF di halaman Upload Jawaban.</p>
                     </div>
                     <div className="flex items-start gap-2">
-                      <span className="font-bold text-emerald-600">4.</span>
-                      <p><strong>Setelah selesai</strong>, klik menu "Upload Jawaban" untuk melakukan analisis butir soal.</p>
+                      <span className="font-bold text-emerald-600 flex-shrink-0">4.</span>
+                      <p className="break-words"><strong>Setelah selesai</strong>, klik menu "Upload Jawaban" untuk melakukan analisis butir soal.</p>
                     </div>
                   </div>
                 </div>
@@ -252,25 +252,25 @@ export default function DashboardPage() {
           {/* Main Form Card */}
           <Card className="border-0 shadow-xl bg-white/80 backdrop-blur">
             <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <FileSpreadsheet className="w-5 h-5" />
-                  <div>
-                    <CardTitle className="text-xl">Informasi Data Ulangan</CardTitle>
-                    <CardDescription className="text-emerald-100 text-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <CardTitle className="text-lg sm:text-xl truncate">Informasi Data Ulangan</CardTitle>
+                    <CardDescription className="text-emerald-100 text-xs sm:text-sm">
                       {isEditMode ? 'Mode Edit - Ubah data sesuai kebutuhan' : 'Klik Edit untuk mengubah data'}
                     </CardDescription>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   {!isEditMode ? (
                     <Button
                       onClick={() => setIsEditMode(true)}
                       variant="secondary"
                       size="sm"
-                      className="bg-white/20 text-white hover:bg-white/30 border-white/30 backdrop-blur gap-2"
+                      className="bg-white/20 text-white hover:bg-white/30 border-white/30 backdrop-blur gap-1.5 sm:gap-2 flex-1 sm:flex-none text-xs sm:text-sm"
                     >
-                      <Edit2 className="w-4 h-4" />
+                      <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       Edit
                     </Button>
                   ) : (
@@ -279,9 +279,9 @@ export default function DashboardPage() {
                         onClick={handleSaveTestInfo}
                         size="sm"
                         disabled={isSaving}
-                        className="bg-emerald-500 text-white hover:bg-emerald-600 gap-2 shadow-lg"
+                        className="bg-emerald-500 text-white hover:bg-emerald-600 gap-1.5 sm:gap-2 shadow-lg flex-1 sm:flex-none text-xs sm:text-sm"
                       >
-                        <Save className="w-4 h-4" />
+                        <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         {isSaving ? 'Menyimpan...' : 'Simpan'}
                       </Button>
                       <Button
@@ -291,9 +291,9 @@ export default function DashboardPage() {
                         }}
                         variant="secondary"
                         size="sm"
-                        className="bg-rose-500 text-white hover:bg-rose-600 gap-2"
+                        className="bg-rose-500 text-white hover:bg-rose-600 gap-1.5 sm:gap-2 flex-1 sm:flex-none text-xs sm:text-sm"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         Batal
                       </Button>
                     </>
@@ -302,18 +302,18 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {fields.map((field) => {
                   const Icon = field.icon;
                   return (
                     <div key={field.key} className="space-y-2">
                       <Label 
                         htmlFor={field.key} 
-                        className="text-sm font-semibold text-slate-700 flex items-center gap-2"
+                        className="text-xs sm:text-sm font-semibold text-slate-700 flex items-center gap-1.5 sm:gap-2"
                       >
-                        <Icon className="w-4 h-4 text-slate-500" />
-                        {field.label}
+                        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 flex-shrink-0" />
+                        <span className="break-words">{field.label}</span>
                       </Label>
                       <Input
                         id={field.key}
@@ -323,7 +323,7 @@ export default function DashboardPage() {
                         onChange={(e) => setTestInfo({ ...testInfo, [field.key]: e.target.value })}
                         disabled={!isEditMode}
                         className={`
-                          text-sm transition-all duration-200
+                          text-xs sm:text-sm transition-all duration-200
                           ${isEditMode 
                             ? 'border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200' 
                             : 'bg-slate-50 border-slate-200'
@@ -336,12 +336,12 @@ export default function DashboardPage() {
               </div>
 
               {/* Info Footer */}
-              <div className="mt-6 pt-6 border-t border-slate-200">
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <div className="p-1.5 bg-emerald-100 rounded">
-                    <Calendar className="w-4 h-4 text-emerald-600" />
+              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-200">
+                <div className="flex items-start sm:items-center gap-2 text-xs sm:text-sm text-slate-600">
+                  <div className="p-1.5 bg-emerald-100 rounded flex-shrink-0">
+                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" />
                   </div>
-                  <span>Data ini akan digunakan untuk membuat laporan analisis ulangan</span>
+                  <span className="break-words">Data ini akan digunakan untuk membuat laporan analisis ulangan</span>
                 </div>
               </div>
             </CardContent>
