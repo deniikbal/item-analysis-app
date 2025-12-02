@@ -8,29 +8,6 @@ import { BarChart3, FileSpreadsheet, Users, TrendingUp, CheckCircle2, Upload } f
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/50">
-      {/* Navbar */}
-      <header className="bg-white/80 backdrop-blur shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">ANABUT</h1>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link href="/auth/login">
-                <Button variant="ghost" className="text-gray-700 hover:text-emerald-600">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/auth/register">
-                <Button className="bg-emerald-600 hover:bg-emerald-700">
-                  Daftar Sekarang
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">

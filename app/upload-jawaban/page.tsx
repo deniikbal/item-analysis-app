@@ -95,6 +95,30 @@ export default function Home() {
   const [isSaving, setIsSaving] = useState(false);
   const [savedDataId, setSavedDataId] = useState<number | null>(null);
 
+  // Helper function for natural sorting of class names (X 1, X 2, X 3, X 10...)
+  const naturalSortKelas = (a: string, b: string): number => {
+    const regex = /(\D+)(\d+)/;
+    const aMatch = a.match(regex);
+    const bMatch = b.match(regex);
+    
+    if (aMatch && bMatch) {
+      const aPrefix = aMatch[1];
+      const bPrefix = bMatch[1];
+      const aNumber = parseInt(aMatch[2], 10);
+      const bNumber = parseInt(bMatch[2], 10);
+      
+      // Compare prefix first (e.g., "X" vs "Y")
+      if (aPrefix !== bPrefix) {
+        return aPrefix.localeCompare(bPrefix);
+      }
+      // Then compare numbers numerically
+      return aNumber - bNumber;
+    }
+    
+    // Fallback to regular string comparison
+    return a.localeCompare(b);
+  };
+
   // Helper function to format date to Indonesian format
   const formatDateIndonesia = (dateString: string): string => {
     if (!dateString) return '-';
@@ -289,11 +313,11 @@ export default function Home() {
         const dayaBedaValue = parseFloat(item.discrimination);
         const tingkatKesukaranValue = parseFloat(item.difficulty);
         
-        let statusSoal = 'Soal sebelum a Direvisi';
+        let statusSoal = 'Soal Perlu Direvisi';
         if (dayaBedaValue >= 0.3 && tingkatKesukaranValue >= 0.3 && tingkatKesukaranValue <= 0.7) {
-          statusSoal = 'Soal sebelum';
+          statusSoal = 'Soal Baik';
         } else if (dayaBedaValue < 0.2 || tingkatKesukaranValue < 0.25 || tingkatKesukaranValue > 0.8) {
-          statusSoal = 'Soal sebelum a Direvisi';
+          statusSoal = 'Soal Perlu Direvisi';
         }
 
         const effectiveDistractors = item.distractors.filter((d: any) => 
@@ -443,11 +467,11 @@ export default function Home() {
         const dayaBedaValue = parseFloat(item.discrimination);
         const tingkatKesukaranValue = parseFloat(item.difficulty);
         
-        let statusSoal = 'Soal sebelum a Direvisi';
+        let statusSoal = 'Soal Perlu Direvisi';
         if (dayaBedaValue >= 0.3 && tingkatKesukaranValue >= 0.3 && tingkatKesukaranValue <= 0.7) {
-          statusSoal = 'Soal sebelum';
+          statusSoal = 'Soal Baik';
         } else if (dayaBedaValue < 0.2 || tingkatKesukaranValue < 0.25 || tingkatKesukaranValue > 0.8) {
-          statusSoal = 'Soal sebelum a Direvisi';
+          statusSoal = 'Soal Perlu Direvisi';
         }
 
         const effectiveDistractors = item.distractors.filter((d: any) => 
@@ -567,6 +591,117 @@ export default function Home() {
 
       yPosition = doc.lastAutoTable.finalY + 8;
 
+      // Statistics Cards - Tuntas/Belum Tuntas (Compact)
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 15;
+      }
+
+      const kkm = parseFloat(testInfo.kkm) || 75;
+      const tuntasCount = conversionPreview.studentsData.filter(s => s.nilai >= kkm).length;
+      const belumTuntasCount = conversionPreview.studentsData.filter(s => s.nilai < kkm).length;
+      const persentaseTuntas = ((tuntasCount / totalStudents) * 100).toFixed(1);
+      const persentaseBelumTuntas = ((belumTuntasCount / totalStudents) * 100).toFixed(1);
+
+      // Title for statistics cards
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('STATISTIK KETUNTASAN SISWA', 10, yPosition);
+      yPosition += 4;
+
+      // Draw two cards side by side (compact)
+      const cardWidth = 95;
+      const cardHeight = 22;
+      const cardSpacing = 5;
+      const leftCardX = 10;
+      const rightCardX = leftCardX + cardWidth + cardSpacing;
+
+      // Card Tuntas (Green)
+      doc.setFillColor(34, 197, 94); // Emerald/Green
+      doc.roundedRect(leftCardX, yPosition, cardWidth, cardHeight, 1.5, 1.5, 'F');
+      
+      // White icon circle (smaller)
+      doc.setFillColor(255, 255, 255);
+      doc.circle(leftCardX + 6, yPosition + 6, 3.5, 'F');
+      
+      // Check icon (smaller)
+      doc.setDrawColor(34, 197, 94);
+      doc.setLineWidth(0.7);
+      doc.line(leftCardX + 4.5, yPosition + 6, leftCardX + 5.5, yPosition + 7);
+      doc.line(leftCardX + 5.5, yPosition + 7, leftCardX + 7.5, yPosition + 5);
+
+      // Text for Tuntas card (compact)
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('TUNTAS', leftCardX + 12, yPosition + 5);
+      
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text(tuntasCount.toString(), leftCardX + 12, yPosition + 13);
+      
+      doc.setFontSize(6);
+      doc.setFont('helvetica', 'normal');
+      doc.text('SISWA', leftCardX + 12, yPosition + 17);
+
+      // Progress bar background for Tuntas (thinner)
+      doc.setFillColor(255, 255, 255, 0.3);
+      doc.roundedRect(leftCardX + 3, yPosition + 18.5, cardWidth - 6, 2, 0.5, 0.5, 'F');
+      
+      // Progress bar fill for Tuntas
+      const tuntasBarWidth = ((cardWidth - 6) * parseFloat(persentaseTuntas)) / 100;
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(leftCardX + 3, yPosition + 18.5, tuntasBarWidth, 2, 0.5, 0.5, 'F');
+      
+      // Percentage text for Tuntas
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${persentaseTuntas}%`, leftCardX + cardWidth - 18, yPosition + 13);
+
+      // Card Belum Tuntas (Red/Orange)
+      doc.setFillColor(239, 68, 68); // Red
+      doc.roundedRect(rightCardX, yPosition, cardWidth, cardHeight, 1.5, 1.5, 'F');
+      
+      // White icon circle (smaller)
+      doc.setFillColor(255, 255, 255);
+      doc.circle(rightCardX + 6, yPosition + 6, 3.5, 'F');
+      
+      // Alert icon (smaller exclamation mark)
+      doc.setFillColor(239, 68, 68);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.text('!', rightCardX + 5.2, yPosition + 7.5);
+
+      // Text for Belum Tuntas card (compact)
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('BELUM TUNTAS', rightCardX + 12, yPosition + 5);
+      
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text(belumTuntasCount.toString(), rightCardX + 12, yPosition + 13);
+      
+      doc.setFontSize(6);
+      doc.setFont('helvetica', 'normal');
+      doc.text('SISWA', rightCardX + 12, yPosition + 17);
+
+      // Progress bar background for Belum Tuntas (thinner)
+      doc.setFillColor(255, 255, 255, 0.3);
+      doc.roundedRect(rightCardX + 3, yPosition + 18.5, cardWidth - 6, 2, 0.5, 0.5, 'F');
+      
+      // Progress bar fill for Belum Tuntas
+      const belumTuntasBarWidth = ((cardWidth - 6) * parseFloat(persentaseBelumTuntas)) / 100;
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(rightCardX + 3, yPosition + 18.5, belumTuntasBarWidth, 2, 0.5, 0.5, 'F');
+      
+      // Percentage text for Belum Tuntas
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${persentaseBelumTuntas}%`, rightCardX + cardWidth - 18, yPosition + 13);
+
+      yPosition += cardHeight + 6;
+
       // Student Data Table
       if (yPosition > 280) {
         doc.addPage();
@@ -575,11 +710,12 @@ export default function Home() {
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0, 0, 0);
       doc.text('DATA SISWA', 10, yPosition);
       yPosition += 5;
 
       const sortedStudents = [...conversionPreview.studentsData].sort((a, b) => {
-        const kelasCompare = (a.kelas || '').localeCompare(b.kelas || '');
+        const kelasCompare = naturalSortKelas(a.kelas || '', b.kelas || '');
         if (kelasCompare !== 0) return kelasCompare;
         return (a.nama || '').localeCompare(b.nama || '');
       });
@@ -902,7 +1038,12 @@ export default function Home() {
       doc.text(`NIP ${testInfo.principalNip || '197303021998021002'}`, leftMargin2, yPosition);
       doc.text(`NIP ${testInfo.teacherNip || '199404416202412033'}`, rightColumnStart2, yPosition);
 
-      const filename = `Analisis-${testInfo.testName || 'Ulangan'}-${testInfo.classInfo || ''}.pdf`;
+      // Generate filename: ANABUT_(Nama Guru)_(Mata Pelajaran)_Tahun Pelajaran
+      const cleanName = (str: string) => str.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
+      const teacherName = cleanName(testInfo.teacherName || 'Guru');
+      const subject = cleanName(testInfo.subject || 'MataPelajaran');
+      const academicYear = cleanName(testInfo.academicYear || 'TahunPelajaran');
+      const filename = `ANABUT_${teacherName}_${subject}_${academicYear}.pdf`;
       doc.save(filename);
       
       // Show success toast
@@ -1031,7 +1172,7 @@ export default function Home() {
 
       // Student Data Rows - sorted by kelas then name
       const sortedExcelStudents = [...conversionPreview.studentsData].sort((a, b) => {
-        const kelasCompare = (a.kelas || '').localeCompare(b.kelas || '');
+        const kelasCompare = naturalSortKelas(a.kelas || '', b.kelas || '');
         if (kelasCompare !== 0) return kelasCompare;
         return (a.nama || '').localeCompare(b.nama || '');
       });
@@ -1183,7 +1324,12 @@ export default function Home() {
       ws['!ref'] = `A1:I${currentRow + 1}`;
 
       XLSX.utils.book_append_sheet(wb, ws, 'Analisis');
-      const excelFilename = `Analisis-${testInfo.testName || 'Ulangan'}-${testInfo.classInfo || ''}.xlsx`;
+      // Generate filename: ANABUT_(Nama Guru)_(Mata Pelajaran)_Tahun Pelajaran
+      const cleanName = (str: string) => str.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
+      const teacherName = cleanName(testInfo.teacherName || 'Guru');
+      const subject = cleanName(testInfo.subject || 'MataPelajaran');
+      const academicYear = cleanName(testInfo.academicYear || 'TahunPelajaran');
+      const excelFilename = `ANABUT_${teacherName}_${subject}_${academicYear}.xlsx`;
       XLSX.writeFile(wb, excelFilename);
 
       // Show success toast
@@ -1713,6 +1859,97 @@ export default function Home() {
               </CardContent>
             </Card>
 
+            {/* Statistics Cards - Tuntas/Belum Tuntas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {(() => {
+                const kkm = parseFloat(testInfo.kkm) || 75;
+                const tuntas = conversionPreview.studentsData.filter(s => s.nilai >= kkm).length;
+                const belumTuntas = conversionPreview.studentsData.filter(s => s.nilai < kkm).length;
+                const persentaseTuntas = ((tuntas / conversionPreview.studentsData.length) * 100).toFixed(1);
+                const persentaseBelumTuntas = ((belumTuntas / conversionPreview.studentsData.length) * 100).toFixed(1);
+                
+                return (
+                  <>
+                    {/* Card Tuntas */}
+                    <Card className="border-0 shadow-lg bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 transform hover:scale-102 transition-all duration-300 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
+                      <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full -ml-8 -mb-8"></div>
+                      <CardContent className="p-5 relative z-10">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="p-2.5 bg-white rounded-xl shadow-md">
+                            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                          </div>
+                          <div className="text-right">
+                            <div className="text-3xl font-black text-white drop-shadow-lg">{tuntas}</div>
+                            <div className="text-xs font-semibold text-emerald-100 uppercase tracking-wide">Siswa</div>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-white font-bold text-sm">Tuntas</span>
+                              <span className="text-white font-black text-lg">{persentaseTuntas}%</span>
+                            </div>
+                            <div className="w-full bg-white/30 rounded-full h-2 overflow-hidden">
+                              <div 
+                                className="bg-white h-full rounded-full shadow-md transition-all duration-500"
+                                style={{ width: `${persentaseTuntas}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between text-white text-xs">
+                            <span className="font-medium">Total Siswa:</span>
+                            <span className="font-bold">{conversionPreview.studentsData.length}</span>
+                          </div>
+                          <div className="text-center py-1.5 bg-white/20 backdrop-blur-sm rounded-md border border-white/30">
+                            <span className="text-white font-bold text-xs">Nilai ≥ {kkm} (KKM)</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Card Belum Tuntas */}
+                    <Card className="border-0 shadow-lg bg-gradient-to-br from-orange-400 via-red-500 to-pink-600 transform hover:scale-102 transition-all duration-300 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
+                      <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full -ml-8 -mb-8"></div>
+                      <CardContent className="p-5 relative z-10">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="p-2.5 bg-white rounded-xl shadow-md">
+                            <AlertCircle className="w-8 h-8 text-red-600" />
+                          </div>
+                          <div className="text-right">
+                            <div className="text-3xl font-black text-white drop-shadow-lg">{belumTuntas}</div>
+                            <div className="text-xs font-semibold text-orange-100 uppercase tracking-wide">Siswa</div>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-white font-bold text-sm">Belum Tuntas</span>
+                              <span className="text-white font-black text-lg">{persentaseBelumTuntas}%</span>
+                            </div>
+                            <div className="w-full bg-white/30 rounded-full h-2 overflow-hidden">
+                              <div 
+                                className="bg-white h-full rounded-full shadow-md transition-all duration-500"
+                                style={{ width: `${persentaseBelumTuntas}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between text-white text-xs">
+                            <span className="font-medium">Total Siswa:</span>
+                            <span className="font-bold">{conversionPreview.studentsData.length}</span>
+                          </div>
+                          <div className="text-center py-1.5 bg-white/20 backdrop-blur-sm rounded-md border border-white/30">
+                            <span className="text-white font-bold text-xs">Nilai &lt; {kkm} (KKM)</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </>
+                );
+              })()}
+            </div>
+
             {/* Student Data Table */}
             <Card className="shadow-xl border-0 bg-white/80 backdrop-blur mb-6">
               <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg py-3">
@@ -1755,8 +1992,8 @@ export default function Home() {
                     <tbody>
                       {[...conversionPreview.studentsData]
                         .sort((a, b) => {
-                          // Sort by kelas first
-                          const kelasCompare = (a.kelas || '').localeCompare(b.kelas || '');
+                          // Sort by kelas first with natural sorting
+                          const kelasCompare = naturalSortKelas(a.kelas || '', b.kelas || '');
                           if (kelasCompare !== 0) return kelasCompare;
                           // Then sort by name alphabetically
                           return (a.nama || '').localeCompare(b.nama || '');
