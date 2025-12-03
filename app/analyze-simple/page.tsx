@@ -124,6 +124,7 @@ export default function AnalyzeSimplePage() {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
+    formData.append('kkm', testInfo.kkm);
 
     try {
       const response = await fetch('/api/convert-preview', {

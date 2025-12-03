@@ -227,6 +227,7 @@ export default function Home() {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
+    formData.append('kkm', testInfo.kkm);
 
     try {
       const response = await fetch('/api/convert-preview', {

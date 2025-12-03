@@ -5,10 +5,14 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
+    const kkmValue = formData.get('kkm') as string;
 
     if (!file) {
       return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
     }
+
+    // Parse KKM, default to 75 if not provided or invalid
+    const kkm = parseFloat(kkmValue) || 75;
 
     const arrayBuffer = await file.arrayBuffer();
     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
@@ -111,7 +115,7 @@ export async function POST(req: NextRequest) {
         jumlahSalah: incorrectCount,
         skor,
         nilai: Math.round(nilai),
-        keterangan: nilai >= 75 ? 'Tuntas' : 'Belum Tuntas',
+        keterangan: nilai >= kkm ? 'Tuntas' : 'Belum Tuntas',
       };
     });
 
