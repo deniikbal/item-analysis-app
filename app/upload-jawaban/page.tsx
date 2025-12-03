@@ -4,6 +4,14 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { AlertCircle, Upload, Loader, Download, ArrowLeft, BarChart3, FileSpreadsheet, CheckCircle2, FileText, User } from 'lucide-react';
 import Link from 'next/link';
 import * as XLSX from 'xlsx';
@@ -94,6 +102,8 @@ export default function Home() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [savedDataId, setSavedDataId] = useState<number | null>(null);
+  const [showPdfFormatDialog, setShowPdfFormatDialog] = useState(false);
+  const [selectedPdfFormat, setSelectedPdfFormat] = useState<'a4' | 'f4'>('a4');
 
   // Helper function for natural sorting of class names (X 1, X 2, X 3, X 10...)
   const naturalSortKelas = (a: string, b: string): number => {
@@ -534,16 +544,20 @@ export default function Home() {
     };
   };
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async (format: 'a4' | 'f4' = 'a4') => {
     if (!conversionPreview || !analysisData) return;
 
     setLoading(true);
+    setShowPdfFormatDialog(false);
 
     try {
+      // F4: 215mm x 330mm, A4: 210mm x 297mm
+      const pageFormat = format === 'f4' ? [215, 330] : 'a4';
+      
       const doc: any = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
-        format: [215, 330], // F4 size
+        format: pageFormat,
       });
 
       let yPosition = 15;
@@ -1549,7 +1563,7 @@ export default function Home() {
                       )}
                     </Button>
                     <Button
-                      onClick={handleDownloadPDF}
+                      onClick={() => setShowPdfFormatDialog(true)}
                       className="bg-rose-500 hover:bg-rose-600 text-white shadow-lg gap-1.5 sm:gap-2 w-full sm:w-auto text-xs sm:text-sm"
                       disabled={loading}
                       size="default"
@@ -2252,6 +2266,93 @@ export default function Home() {
             {/* End of PDF Content */}
           </div>
         )}
+
+        {/* PDF Format Selection Modal */}
+        <Dialog open={showPdfFormatDialog} onOpenChange={setShowPdfFormatDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Pilih Format PDF</DialogTitle>
+              <DialogDescription>
+                Pilih ukuran kertas untuk file PDF yang akan diunduh
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div
+                className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                  selectedPdfFormat === 'a4'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => setSelectedPdfFormat('a4')}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-gray-900">A4</h3>
+                    <p className="text-sm text-gray-500">210mm x 297mm (Default)</p>
+                  </div>
+                  <div className={`h-4 w-4 rounded-full border-2 ${
+                    selectedPdfFormat === 'a4'
+                      ? 'border-blue-600 bg-blue-600'
+                      : 'border-gray-300'
+                  }`}>
+                    {selectedPdfFormat === 'a4' && (
+                      <div className="h-full w-full rounded-full bg-white scale-50"></div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div
+                className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                  selectedPdfFormat === 'f4'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => setSelectedPdfFormat('f4')}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-gray-900">F4</h3>
+                    <p className="text-sm text-gray-500">215mm x 330mm (Legal)</p>
+                  </div>
+                  <div className={`h-4 w-4 rounded-full border-2 ${
+                    selectedPdfFormat === 'f4'
+                      ? 'border-blue-600 bg-blue-600'
+                      : 'border-gray-300'
+                  }`}>
+                    {selectedPdfFormat === 'f4' && (
+                      <div className="h-full w-full rounded-full bg-white scale-50"></div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowPdfFormatDialog(false)}
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={() => handleDownloadPDF(selectedPdfFormat)}
+                disabled={loading}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {loading ? (
+                  <>
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                    Memproses...
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4 mr-2" />
+                    Download PDF
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         </div>
       </div>
     </>
