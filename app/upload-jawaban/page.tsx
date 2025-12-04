@@ -18,6 +18,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import toast, { Toaster } from 'react-hot-toast';
+import { QuestionDistributionChart } from '../components/QuestionDistributionChart';
 
 interface TestInfo {
   schoolName: string;
@@ -1010,10 +1011,184 @@ export default function Home() {
         yPosition = doc.lastAutoTable.finalY + 15;
       }
 
-      // Add signature section (always show)
-      if (yPosition > 270 || !stats) {
+      // Add signature section after statistics (check if space available)
+      const signatureHeightStats = 45; // Approximate height needed for signature section
+      
+      if (yPosition + signatureHeightStats > 280) {
+        // Not enough space, create new page
         doc.addPage();
         yPosition = 20;
+      }
+
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(0, 0, 0);
+
+      // Signature section after statistics - two columns
+      const leftMarginStats = 20;
+      const rightColumnStartStats = leftMarginStats + 120;
+      
+      // Date and location
+      const todayStats = new Date();
+      const monthsStats = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      const dateStrStats = `Bantarujeg, ${todayStats.getDate()} ${monthsStats[todayStats.getMonth()]} ${todayStats.getFullYear()}`;
+      doc.text(dateStrStats, rightColumnStartStats, yPosition);
+
+      yPosition += 7;
+      
+      // Column headers
+      doc.text('Mengetahui,', leftMarginStats, yPosition);
+      doc.text('Guru Mata Pelajaran', rightColumnStartStats, yPosition);
+      
+      yPosition += 5;
+      doc.text('Kepala Sekolah', leftMarginStats, yPosition);
+
+      yPosition += 20; // Space for signature
+
+      // Names and NIP
+      doc.setFont('helvetica', 'bold');
+      doc.text(testInfo.principalName || 'Dr. H. Toto Warsito, S.Ag., M.Ag', leftMarginStats, yPosition);
+      doc.text(testInfo.teacherName || 'REVI INDIKA, S.Pd., Gr.', rightColumnStartStats, yPosition);
+      
+      yPosition += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.text(`NIP ${testInfo.principalNip || '197303021998021002'}`, leftMarginStats, yPosition);
+      doc.text(`NIP ${testInfo.teacherNip || '199404416202412033'}`, rightColumnStartStats, yPosition);
+
+      // Add Distribution Chart Section
+      doc.addPage();
+      yPosition = 15;
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0, 0, 0);
+      doc.text('DISTRIBUSI JAWABAN SISWA PER SOAL', 10, yPosition);
+      yPosition += 7;
+
+      // Draw distribution charts for each question
+      const chartsPerPage = 10; // 2 columns x 5 rows
+      let chartCount = 0;
+      const chartWidth = 95;
+      const chartHeight = 50; // Height adjusted for 5 rows
+      const chartSpacing = 3; // Spacing between charts
+      const leftColX = 10;
+      const rightColX = leftColX + chartWidth + chartSpacing;
+
+      analysisData.forEach((item, idx) => {
+        // Check if we need a new page
+        if (chartCount > 0 && chartCount % chartsPerPage === 0) {
+          doc.addPage();
+          yPosition = 15;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'bold');
+          doc.text('DISTRIBUSI JAWABAN SISWA PER SOAL (Lanjutan)', 10, yPosition);
+          yPosition += 7;
+        }
+
+        // Calculate position
+        const rowIndex = Math.floor((chartCount % chartsPerPage) / 2);
+        const colIndex = chartCount % 2;
+        const chartX = colIndex === 0 ? leftColX : rightColX;
+        const chartY = yPosition + (rowIndex * (chartHeight + chartSpacing));
+
+        // Draw card border
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.3);
+        doc.roundedRect(chartX, chartY, chartWidth, chartHeight, 1, 1, 'S');
+
+        // Header background
+        doc.setFillColor(236, 253, 245); // emerald-50
+        doc.roundedRect(chartX, chartY, chartWidth, 8, 1, 1, 'F');
+
+        // Question number and key
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Soal No. ${item.noItem}`, chartX + 2, chartY + 5);
+        
+        // Key badge
+        const keyAnswer = item.options.find(opt => opt.isKey)?.option || 'A';
+        doc.setFillColor(16, 185, 129); // emerald-600
+        doc.roundedRect(chartX + chartWidth - 18, chartY + 2, 16, 5, 1, 1, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(7);
+        doc.text(`Kunci: ${keyAnswer}`, chartX + chartWidth - 10, chartY + 5, { align: 'center' });
+
+        // Info text
+        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(5.5);
+        doc.setFont('helvetica', 'normal');
+        const correctCount = Math.round(item.propCorrect * totalStudents);
+        doc.text(`${correctCount}/${totalStudents} jawaban benar`, chartX + 2, chartY + 7.5);
+
+        // Draw bars for each option
+        let barY = chartY + 10;
+        const barSpacing = 8; // Increased spacing for 5 rows layout
+        const maxBarWidth = chartWidth - 30;
+        const maxPercentage = Math.max(...item.options.map(opt => opt.propEndorsing * 100));
+
+        item.options.forEach((opt) => {
+          const percentage = (opt.propEndorsing * 100).toFixed(1);
+          const count = Math.round(opt.propEndorsing * totalStudents);
+          const barWidth = maxPercentage > 0 ? (parseFloat(percentage) / maxPercentage) * maxBarWidth : 0;
+
+          // Bar background (draw first)
+          const barHeight = 4;
+          const barStartY = barY + 3;
+          doc.setFillColor(241, 245, 249); // slate-100
+          doc.roundedRect(chartX + 2, barStartY, maxBarWidth, barHeight, 0.5, 0.5, 'F');
+
+          // Bar fill
+          if (barWidth > 0) {
+            if (opt.isKey) {
+              doc.setFillColor(16, 185, 129); // emerald-600 for correct answer
+            } else {
+              doc.setFillColor(148, 163, 184); // slate-400 for distractors
+            }
+            doc.roundedRect(chartX + 2, barStartY, barWidth, barHeight, 0.5, 0.5, 'F');
+
+            // Percentage text inside bar (if space available)
+            if (barWidth > 12) {
+              doc.setTextColor(255, 255, 255);
+              doc.setFontSize(6);
+              doc.setFont('helvetica', 'bold');
+              doc.text(`${percentage}%`, chartX + 2 + barWidth - 2, barStartY + (barHeight / 2) + 1, { align: 'right' });
+            }
+          }
+
+          // Option label (aligned with bar center)
+          doc.setFontSize(7);
+          doc.setFont('helvetica', opt.isKey ? 'bold' : 'normal');
+          doc.setTextColor(0, 0, 0);
+          const optionLabel = opt.isKey ? `✓ ${opt.option}` : `  ${opt.option}`;
+          doc.text(optionLabel, chartX + 2, barStartY + (barHeight / 2) + 1);
+
+          // Count and percentage (aligned with bar center)
+          doc.setFontSize(6);
+          doc.setTextColor(100, 100, 100);
+          doc.text(`${count} (${percentage}%)`, chartX + chartWidth - 2, barStartY + (barHeight / 2) + 1, { align: 'right' });
+
+          barY += barSpacing;
+        });
+
+        chartCount++;
+      });
+
+      // Calculate position after last chart
+      const lastRowIndex = Math.floor(((chartCount - 1) % chartsPerPage) / 2);
+      const lastChartBottomY = yPosition + (lastRowIndex * (chartHeight + chartSpacing)) + chartHeight;
+      
+      // Add signature section (check if space available on current page)
+      const signatureHeight = 45; // Approximate height needed for signature section
+      
+      if (lastChartBottomY + signatureHeight + 10 > 280) {
+        // Not enough space, create new page
+        doc.addPage();
+        yPosition = 20;
+      } else {
+        // Enough space, continue on same page
+        yPosition = lastChartBottomY + 10;
       }
 
       doc.setFontSize(9);
@@ -2208,6 +2383,40 @@ export default function Home() {
                       <p className="text-sm mt-2">NIP {testInfo.teacherNip || '199404162024212033'}</p>
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Visualisasi Distribusi Jawaban per Soal */}
+            {analysisData && conversionPreview && (
+              <div className="mt-8">
+                <Card className="border-0 shadow-xl bg-white/80 backdrop-blur mb-6">
+                  <CardHeader className="border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white/20 rounded-lg backdrop-blur">
+                        <BarChart3 className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl font-bold">Distribusi Jawaban Siswa per Soal</CardTitle>
+                        <p className="text-emerald-100 text-sm mt-1">
+                          Persentase jawaban siswa untuk setiap opsi pilihan ganda
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                </Card>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {analysisData.map((item) => (
+                    <QuestionDistributionChart
+                      key={item.noItem}
+                      questionNumber={item.noItem}
+                      questionText={`Tingkat Kesukaran: ${item.tingkatKesukaran} | Daya Beda: ${item.dayaBeda}`}
+                      options={item.options}
+                      totalStudents={totalStudents}
+                      correctAnswer={item.options.find(opt => opt.isKey)?.option || 'A'}
+                    />
+                  ))}
                 </div>
               </div>
             )}
