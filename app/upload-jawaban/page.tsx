@@ -1074,23 +1074,26 @@ export default function Home() {
       const chartSpacing = 3; // Spacing between charts
       const leftColX = 10;
       const rightColX = leftColX + chartWidth + chartSpacing;
+      let currentPageStartY = yPosition; // Track Y position for current page
 
       analysisData.forEach((item, idx) => {
         // Check if we need a new page
         if (chartCount > 0 && chartCount % chartsPerPage === 0) {
           doc.addPage();
           yPosition = 15;
+          currentPageStartY = yPosition; // Update start Y for new page
           doc.setFontSize(10);
           doc.setFont('helvetica', 'bold');
           doc.text('DISTRIBUSI JAWABAN SISWA PER SOAL (Lanjutan)', 10, yPosition);
           yPosition += 7;
+          currentPageStartY = yPosition; // Update after title
         }
 
         // Calculate position
         const rowIndex = Math.floor((chartCount % chartsPerPage) / 2);
         const colIndex = chartCount % 2;
         const chartX = colIndex === 0 ? leftColX : rightColX;
-        const chartY = yPosition + (rowIndex * (chartHeight + chartSpacing));
+        const chartY = currentPageStartY + (rowIndex * (chartHeight + chartSpacing));
 
         // Draw card border
         doc.setDrawColor(200, 200, 200);
@@ -1175,9 +1178,9 @@ export default function Home() {
         chartCount++;
       });
 
-      // Calculate position after last chart
+      // Calculate position after last chart on current page
       const lastRowIndex = Math.floor(((chartCount - 1) % chartsPerPage) / 2);
-      const lastChartBottomY = yPosition + (lastRowIndex * (chartHeight + chartSpacing)) + chartHeight;
+      const lastChartBottomY = currentPageStartY + (lastRowIndex * (chartHeight + chartSpacing)) + chartHeight;
       
       // Add signature section (check if space available on current page)
       const signatureHeight = 45; // Approximate height needed for signature section
