@@ -904,10 +904,10 @@ export default function Home() {
       autoTable(doc, {
         startY: yPosition,
         head: [[
-          { content: 'No.', rowSpan: 2, styles: { lineWidth: 0.1, lineColor: [0, 0, 0] } },
-          { content: 'Statistics Item', colSpan: 3, styles: { lineWidth: 0.1, lineColor: [0, 0, 0] } },
-          { content: 'Statistics Option', colSpan: 3, styles: { lineWidth: 0.1, lineColor: [0, 0, 0] } },
-          { content: 'Tafsiran', colSpan: 4, styles: { lineWidth: 0.1, lineColor: [0, 0, 0] } },
+          { content: 'No.', rowSpan: 2, styles: { lineWidth: 0.1, lineColor: [0, 0, 0], cellPadding: 0.5 } },
+          { content: 'Statistics Item', colSpan: 3, styles: { lineWidth: 0.1, lineColor: [0, 0, 0], cellPadding: 0.5 } },
+          { content: 'Statistics Option', colSpan: 3, styles: { lineWidth: 0.1, lineColor: [0, 0, 0], cellPadding: 0.5 } },
+          { content: 'Tafsiran', colSpan: 4, styles: { lineWidth: 0.1, lineColor: [0, 0, 0], cellPadding: 0.5 } },
         ], [
           'Prop.Cor', 'Biser', 'Pt.Biser',
           'Opt', 'Prop.End', 'Key',
@@ -916,20 +916,23 @@ export default function Home() {
         body: bodyData,
         theme: 'grid',
         styles: { 
-          fontSize: 5, 
-          cellPadding: 1, 
+          fontSize: 4.5, 
+          cellPadding: 0.5, 
           overflow: 'linebreak', 
           halign: 'center',
           lineWidth: 0.1,
           lineColor: [0, 0, 0],
-          valign: 'middle'
+          valign: 'middle',
+          minCellHeight: 3
         },
         headStyles: { 
           fillColor: [147, 197, 253], 
           textColor: 0, 
           fontStyle: 'bold',
           lineWidth: 0.1,
-          lineColor: [0, 0, 0]
+          lineColor: [0, 0, 0],
+          cellPadding: 0.5,
+          fontSize: 5
         },
         columnStyles: {
           0: { cellWidth: 10 },
@@ -938,11 +941,11 @@ export default function Home() {
           3: { cellWidth: 16 },
           4: { cellWidth: 10 },
           5: { cellWidth: 16 },
-          6: { cellWidth: 10, fillColor: [255, 250, 205], fontStyle: 'bold', fontSize: 7 },
-          7: { cellWidth: 25, fontSize: 5.5, valign: 'middle' },
-          8: { cellWidth: 25, fontSize: 5.5, valign: 'middle' },
-          9: { cellWidth: 27, fontSize: 5.5, valign: 'middle' },
-          10: { cellWidth: 23, fontSize: 5.5, valign: 'middle' },
+          6: { cellWidth: 10, fillColor: [255, 250, 205], fontStyle: 'bold', fontSize: 6 },
+          7: { cellWidth: 25, fontSize: 4.5, valign: 'middle' },
+          8: { cellWidth: 25, fontSize: 4.5, valign: 'middle' },
+          9: { cellWidth: 27, fontSize: 4.5, valign: 'middle' },
+          10: { cellWidth: 23, fontSize: 4.5, valign: 'middle' },
         },
         margin: { left: 10, right: 10 },
         didDrawCell: function(data: any) {
@@ -1067,11 +1070,11 @@ export default function Home() {
       yPosition += 7;
 
       // Draw distribution charts for each question
-      const chartsPerPage = 10; // 2 columns x 5 rows
+      const chartsPerPage = 12; // 2 columns x 6 rows
       let chartCount = 0;
       const chartWidth = 95;
-      const chartHeight = 50; // Height adjusted for 5 rows
-      const chartSpacing = 3; // Spacing between charts
+      const chartHeight = 38; // Height adjusted for 6 rows (reduced to fit 6 rows in one page)
+      const chartSpacing = 2; // Spacing between charts (reduced from 3 to 2)
       const leftColX = 10;
       const rightColX = leftColX + chartWidth + chartSpacing;
       let currentPageStartY = yPosition; // Track Y position for current page
@@ -1126,8 +1129,8 @@ export default function Home() {
         doc.text(`${correctCount}/${totalStudents} jawaban benar`, chartX + 2, chartY + 7.5);
 
         // Draw bars for each option
-        let barY = chartY + 10;
-        const barSpacing = 8; // Increased spacing for 5 rows layout
+        let barY = chartY + 9; // Reduced from 10 to 9
+        const barSpacing = 5.5; // Reduced spacing for 6 rows layout (from 8 to 5.5)
         const maxBarWidth = chartWidth - 30;
         const maxPercentage = Math.max(...item.options.map(opt => opt.propEndorsing * 100));
 
